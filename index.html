@@ -1,0 +1,3689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overlap - The fastest way to schedule across time zones</title>
+    <meta name="description" content="The fastest way to schedule across time zones. Find overlapping working hours instantly.">
+    
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Overlap">
+    <meta property="og:description" content="The fastest way to schedule across time zones. Find overlapping working hours instantly.">
+    <meta property="og:image" content="https://useoverlap.com/og-image.png">
+    <meta property="og:url" content="https://useoverlap.com">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Overlap">
+    <meta name="twitter:description" content="The fastest way to schedule across time zones.">
+    <meta name="twitter:image" content="https://useoverlap.com/og-image.png">
+    
+    <!-- PWA -->
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Overlap">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --bg-subtle: #141414;
+            --bg-muted: #1f1f1f;
+            --border: #262626;
+            --text: #fafafa;
+            --text-secondary: #a3a3a3;
+            --text-muted: #737373;
+            --accent: #F5A623;
+            --accent-light: rgba(245, 166, 35, 0.2);
+            --accent-bg: #3d2a0a;
+            --work-bg: rgba(245, 166, 35, 0.2);
+            --work-border: #b37a00;
+            --red: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 32px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 600;
+            font-size: 20px;
+        }
+
+        .logo svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .btn:hover {
+            background: var(--bg-muted);
+        }
+
+        .btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .btn-icon {
+            padding: 8px;
+            border: none;
+            background: transparent;
+        }
+
+        .btn-icon:hover {
+            background: var(--bg-muted);
+        }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            gap: 16px;
+        }
+
+        .toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Date picker */
+        .date-picker {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .date-btn {
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .date-btn:hover {
+            background: var(--bg-muted);
+        }
+
+        .date-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .date-display {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .now-btn {
+            padding: 4px 8px;
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            background: transparent;
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        .now-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: var(--bg-muted);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+            padding: 0;
+        }
+
+        .toggle-switch:hover {
+            background: var(--bg-subtle);
+        }
+
+        .toggle-switch.active {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .toggle-knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active .toggle-knob {
+            transform: translateX(20px);
+        }
+
+        /* Legend - inline with add timezone */
+        .legend {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+        }
+
+        .legend-dot.work {
+            background: var(--work-bg);
+            border: 1px solid var(--work-border);
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        /* Current time */
+        .now-display {
+        }
+
+        .now-time {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -2px;
+            color: var(--text);
+        }
+
+        .now-date {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        /* Timezone wrapper */
+        .tz-wrapper {
+            position: relative;
+        }
+
+        .tz-list-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Add timezone input */
+        .add-tz-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .add-tz-wrap {
+            position: relative;
+            width: 125px;
+            flex-shrink: 0;
+        }
+
+        .add-tz-row-spacer {
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        /* Compact date picker inline - centered */
+        .date-picker-inline {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .date-btn-sm {
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--bg);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .date-btn-sm:hover {
+            background: var(--bg-muted);
+            color: var(--text);
+        }
+
+        .date-btn-sm svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .date-display-sm {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text);
+            text-align: center;
+            white-space: nowrap;
+            padding: 0 8px;
+        }
+
+        .now-btn-sm {
+            padding: 4px 8px;
+            font-size: 10px;
+            font-weight: 600;
+            background: var(--red);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 4px;
+        }
+
+        .now-btn-sm:hover {
+            background: #dc2626;
+        }
+
+        .find-time-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            background: #92610a;
+            color: #fcd34d;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .find-time-btn:hover {
+            background: #78500a;
+        }
+
+        .find-time-btn svg {
+            width: 12px;
+            height: 12px;
+            stroke: #fcd34d;
+        }
+
+        .find-time-btn.no-overlap {
+            background: var(--bg-muted);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+        }
+        
+        .find-time-btn.no-overlap svg {
+            stroke: var(--text-muted);
+        }
+
+        .add-tz-input {
+            width: 100%;
+            padding: 8px 10px;
+            padding-left: 30px;
+            border: 1px dashed var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: inherit;
+            background: var(--bg);
+            color: var(--text);
+            outline: none;
+        }
+
+        .add-tz-input:focus {
+            border-color: var(--accent);
+            border-style: solid;
+        }
+
+        .add-tz-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .add-tz-icon {
+            position: absolute;
+            left: 9px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .add-tz-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 280px;
+            margin-top: 4px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            z-index: 100;
+            display: none;
+            max-height: 240px;
+            overflow-y: auto;
+        }
+
+        .add-tz-results.open {
+            display: block;
+        }
+
+        .add-tz-result {
+            padding: 8px 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .add-tz-result:hover {
+            background: var(--bg-muted);
+        }
+
+        .add-tz-result.highlighted {
+            background: var(--bg-muted);
+        }
+
+        .add-tz-result.added {
+            opacity: 0.4;
+            cursor: default;
+        }
+
+        .add-tz-result.added:hover {
+            background: transparent;
+        }
+
+        .added-label {
+            font-size: 9px;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-left: 4px;
+        }
+
+        .add-tz-result-city {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .add-tz-result-region {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .add-tz-result-offset {
+            color: var(--text-secondary);
+            font-size: 11px;
+        }
+
+        .add-tz-noresult {
+            padding: 12px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* Timezone list */
+        .tz-list {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .tz-row {
+            display: flex;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tz-row:last-child {
+            border-bottom: none;
+        }
+
+        .tz-info {
+            width: 180px;
+            padding: 12px 14px;
+            border-right: 1px solid var(--border);
+            flex-shrink: 0;
+            position: relative;
+            background: var(--bg);
+            z-index: 5;
+            overflow: hidden;
+        }
+
+        .tz-city {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tz-badge {
+            font-size: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: var(--accent-bg);
+            color: var(--accent);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .tz-meta {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        .tz-current {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            margin-top: 4px;
+            white-space: nowrap;
+        }
+
+        .tz-reorder {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1px;
+            padding: 0 1px;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .tz-row:hover .tz-reorder {
+            opacity: 1;
+        }
+
+        .tz-move {
+            width: 12px;
+            height: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 7px;
+            padding: 0;
+        }
+
+        .tz-move:hover:not(:disabled) {
+            background: var(--bg-muted);
+            color: var(--text);
+        }
+
+        .tz-move:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .tz-remove {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 18px;
+            height: 18px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            padding: 0;
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        .tz-row:hover .tz-remove {
+            opacity: 1;
+        }
+
+        .tz-remove:hover {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        /* Timeline */
+        .timeline-scroll {
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .timeline-scroll::-webkit-scrollbar {
+            height: 0;
+        }
+
+        .timeline {
+            display: flex;
+            padding: 18px 0 4px 0;
+            min-width: max-content;
+            position: relative;
+        }
+
+        .slot {
+            width: 24px;
+            height: 52px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .slot.work {
+            background: var(--work-bg);
+        }
+
+        .slot-label {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .hour-num {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+            line-height: 1;
+        }
+
+        .hour-ampm {
+            font-size: 8px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-top: 1px;
+        }
+
+        .slot-day {
+            position: absolute;
+            top: -16px;
+            left: 20px;
+            transform: translateX(-50%);
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--accent);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Day start indicator line */
+        .slot.day-start {
+            border-left: 2px solid var(--accent);
+        }
+
+        /* Weekend indicator - subtle background tint */
+        .slot.weekend {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .slot.weekend.work {
+            background: rgba(245, 166, 35, 0.15);
+        }
+
+        /* Selection box */
+        .selection-box {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            background: var(--accent-light);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            pointer-events: none;
+            z-index: 4;
+            opacity: 0;
+        }
+
+        .selection-box.visible {
+            opacity: 1;
+        }
+
+        /* Hover highlight */
+        .hover-highlight {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 0.1s;
+        }
+
+        .hover-highlight.visible {
+            opacity: 1;
+        }
+
+        /* NOW line */
+        .now-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--red);
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        .create-invite-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+
+        .create-invite-container.visible {
+            display: flex;
+        }
+
+        .create-invite-container.visible + .tip {
+            display: none;
+        }
+
+        .create-invite-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .create-invite-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .create-btn-inline {
+            background: var(--bg-muted);
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 14px;
+            transition: all 0.15s;
+        }
+
+        .create-btn-inline:hover {
+            background: var(--border);
+            transform: scale(1.05);
+        }
+
+        .create-btn-inline svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .create-btn-inline.ical {
+            background: var(--bg-muted);
+        }
+
+        .create-btn-inline.copy {
+            background: var(--bg-muted);
+        }
+
+        .create-btn-inline.copy.copied {
+            background: #166534;
+            border-color: #22c55e;
+        }
+
+        .btn-separator {
+            width: 1px;
+            height: 24px;
+            background: var(--border);
+            margin: 0 4px;
+            align-self: center;
+        }
+
+        .copy-btn-small {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .copy-btn-small:hover {
+            background: var(--bg-muted);
+            color: var(--text);
+        }
+
+        .copy-btn-small.copied {
+            color: var(--text);
+        }
+
+        .copy-btn-small svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Extension banner */
+        .extension-banner,
+        .pwa-banner {
+            background: linear-gradient(135deg, rgba(74, 144, 217, 0.1), rgba(245, 166, 35, 0.1));
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .pwa-banner {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(74, 144, 217, 0.1));
+        }
+
+        .extension-banner-title {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .extension-banner-btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .extension-banner-btn:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .share-btn:hover {
+            background: var(--bg-muted);
+            color: var(--text);
+        }
+
+        .footer-link {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            color: var(--text);
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 16px;
+            }
+            
+            .extension-banner {
+                display: none;
+            }
+            
+            .hero {
+                display: none;
+            }
+        }
+
+        /* Tip */
+        .tip {
+            text-align: center;
+            padding: 12px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        
+        .tip-mobile {
+            display: none;
+        }
+        
+        .tip-desktop {
+            display: inline;
+        }
+
+        .shortcuts-hint {
+            opacity: 0.7;
+        }
+
+        kbd {
+            display: inline-block;
+            padding: 2px 5px;
+            font-size: 10px;
+            font-family: inherit;
+            background: var(--bg-muted);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            margin: 0 1px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px 12px;
+            }
+            
+            /* Header */
+            .header {
+                margin-bottom: 16px;
+            }
+            .tagline {
+                font-size: 12px;
+            }
+            .header-right {
+                position: absolute;
+                top: 16px;
+                right: 12px;
+            }
+            
+            /* Toolbar - keep original layout */
+            .add-tz-row {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .add-tz-input {
+                font-size: 13px;
+            }
+            .date-picker-inline {
+                flex: 1;
+                justify-content: center;
+            }
+            .date-display-sm {
+                font-size: 11px;
+                font-weight: 600;
+            }
+            .find-time-btn {
+                padding: 4px 10px;
+                font-size: 10px;
+                height: 24px;
+            }
+            .now-btn-sm {
+                height: 24px;
+            }
+            
+            /* Timezone rows */
+            .tz-info {
+                width: 90px;
+                min-width: 90px;
+                padding: 6px 8px;
+            }
+            .tz-city {
+                font-size: 12px;
+            }
+            .tz-meta {
+                font-size: 9px;
+            }
+            .tz-time {
+                font-size: 16px;
+            }
+            
+            /* Hide desktop-only elements */
+            .hero {
+                display: none;
+            }
+            .extension-banner {
+                display: none;
+            }
+            
+            /* Tip - show mobile version */
+            .tip {
+                font-size: 11px;
+            }
+            .tip-mobile {
+                display: inline;
+            }
+            .tip-desktop {
+                display: none;
+            }
+            
+            /* Mobile selected time display - make it prominent */
+            .date-display-sm {
+                font-weight: 600;
+                color: var(--text);
+            }
+            
+            /* Calendar buttons */
+            .create-invite-container {
+                padding: 12px;
+            }
+            .create-invite-label {
+                font-size: 9px;
+            }
+            .create-invite-buttons {
+                gap: 8px;
+            }
+            .create-btn-inline {
+                padding: 8px 10px;
+            }
+            .create-btn-inline svg {
+                width: 18px;
+                height: 18px;
+            }
+            .btn-separator {
+                height: 20px;
+            }
+            .copy-btn-small {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+            
+            /* Footer */
+            .footer-links {
+                margin-top: 16px;
+            }
+        }
+        
+        /* Even smaller screens */
+        @media (max-width: 480px) {
+            .add-tz-wrap {
+                max-width: 160px;
+            }
+            .find-time-btn span {
+                display: none;
+            }
+            .find-time-btn {
+                padding: 8px 10px;
+            }
+            .tz-info {
+                width: 80px;
+                min-width: 80px;
+            }
+            .tz-controls {
+                gap: 2px;
+            }
+            .tz-move, .tz-remove {
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <svg viewBox="0 0 128 128" fill="none">
+                        <rect x="16" y="24" width="56" height="72" rx="8" fill="#4A90D9" opacity="0.85"/>
+                        <rect x="56" y="32" width="56" height="72" rx="8" fill="#F5A623" opacity="0.85"/>
+                    </svg>
+                    Overlap
+                </div>
+                <p class="tagline">The fastest way to schedule across time zones</p>
+            </div>
+            <div class="header-right">
+                <span class="toggle-label">24h</span>
+                <button class="toggle-switch" id="toggle24h" role="switch" aria-checked="false">
+                    <span class="toggle-knob"></span>
+                </button>
+            </div>
+        </header>
+
+        <div class="hero">
+            <div class="now-display">
+                <div class="now-time" id="nowTime">--:--</div>
+                <div class="now-date" id="nowDate">--</div>
+            </div>
+        </div>
+
+        <div class="tz-wrapper">
+            <div class="add-tz-row">
+                <div class="add-tz-wrap">
+                    <svg class="add-tz-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    <input type="text" class="add-tz-input" id="addTzInput" placeholder="Add a place...">
+                    <div class="add-tz-results" id="addTzResults"></div>
+                </div>
+                <div class="date-picker-inline">
+                    <button class="date-btn-sm" id="datePrevBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"/>
+                        </svg>
+                    </button>
+                    <span class="date-display-sm" id="dateDisplay">Today</span>
+                    <button class="date-btn-sm" id="dateNextBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </button>
+                    <button class="now-btn-sm" id="nowBtn">Now</button>
+                </div>
+                <button class="find-time-btn" id="findTimeBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    Find Time
+                </button>
+            </div>
+
+            <div class="tz-list-container">
+                <div class="tz-list" id="tzList"></div>
+                <div class="hover-highlight" id="hoverHighlight"></div>
+                <div class="selection-box" id="selectionBox"></div>
+                <div class="now-line" id="nowLine" style="display:none"></div>
+            </div>
+            
+            <div class="create-invite-container" id="createInviteContainer">
+                <span class="create-invite-label">ADD TO CALENDAR</span>
+                <div class="create-invite-buttons">
+                    <button class="create-btn-inline google" id="googleCalBtn" title="Google Calendar (G)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                        </svg>
+                    </button>
+                    <button class="create-btn-inline teams" id="teamsCalBtn" title="Microsoft Teams (T)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M20.5 6h-5V4.5A1.5 1.5 0 0014 3h-4a1.5 1.5 0 00-1.5 1.5V6h-5A1.5 1.5 0 002 7.5v10A1.5 1.5 0 003.5 19h17a1.5 1.5 0 001.5-1.5v-10A1.5 1.5 0 0020.5 6z" fill="#5059C9"/>
+                            <circle cx="17" cy="5" r="2.5" fill="#7B83EB"/>
+                            <circle cx="12" cy="10" r="3" fill="white"/>
+                            <path d="M7 18v-4a5 5 0 0110 0v4H7z" fill="white"/>
+                            <circle cx="19" cy="10" r="2" fill="#7B83EB"/>
+                            <path d="M16 18v-3.5a3.5 3.5 0 016 0V18h-6z" fill="#7B83EB"/>
+                        </svg>
+                    </button>
+                    <button class="create-btn-inline zoom" id="zoomCalBtn" title="Zoom (Z)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="2" y="5" width="20" height="14" rx="3" fill="#2D8CFF"/>
+                            <path d="M7 9.5h6v5H7z" fill="white"/>
+                            <path d="M14 10l4-2v8l-4-2v-4z" fill="white"/>
+                        </svg>
+                    </button>
+                    <button class="create-btn-inline ical" id="icalBtn" title="Download .ics file (I)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="4" width="18" height="18" rx="2" stroke="#a3a3a3" stroke-width="2"/>
+                            <line x1="3" y1="10" x2="21" y2="10" stroke="#a3a3a3" stroke-width="2"/>
+                            <line x1="8" y1="2" x2="8" y2="6" stroke="#a3a3a3" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="16" y1="2" x2="16" y2="6" stroke="#a3a3a3" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M8 14l2 2 4-4" stroke="#a3a3a3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <span class="btn-separator"></span>
+                    <button class="copy-btn-small" id="copyBtn" title="Copy to clipboard (⌘C)">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <p class="tip" id="tip"><span class="tip-mobile">Drag to select a meeting time</span><span class="tip-desktop">Drag to select · <kbd>A</kbd> add · <kbd>F</kbd> find · <kbd>N</kbd> now · <kbd>⌘C</kbd> copy</span></p>
+        
+        <!-- Update href with Chrome Web Store URL when approved -->
+        <div class="extension-banner" id="extensionBanner">
+            <span class="extension-banner-title">⚡ Get the Chrome Extension</span>
+            <a href="#" class="extension-banner-btn" id="extensionLink">Add to Chrome</a>
+        </div>
+        
+        <div class="pwa-banner" id="pwaBanner" style="display: none;">
+            <span class="extension-banner-title">📱 Add to Home Screen</span>
+            <button class="extension-banner-btn" id="pwaInstallBtn">Install</button>
+        </div>
+        
+        <div class="footer-links">
+            <button class="share-btn" id="shareBtn" title="Share Overlap">
+                <svg viewBox="0 0 24 24" fill="none" width="14" height="14">
+                    <path d="M18 8a3 3 0 100-6 3 3 0 000 6zM6 15a3 3 0 100-6 3 3 0 000 6zM18 22a3 3 0 100-6 3 3 0 000 6zM8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Share
+            </button>
+            <a href="/privacy.html" class="footer-link">Privacy</a>
+        </div>
+    </div>
+
+    <script>
+        // Generate all IANA timezones with city names
+        const allTimezones = Intl.supportedValuesOf('timeZone').map(tz => {
+            const parts = tz.split('/');
+            const city = parts[parts.length - 1].replace(/_/g, ' ');
+            const region = parts.length > 1 ? parts[0].replace(/_/g, ' ') : '';
+            return { city, region, tz };
+        });
+
+        // Common cities mapping for better search
+        const cityAliases = {
+            // Timezone abbreviations
+            'PST': 'America/Los_Angeles',
+            'PDT': 'America/Los_Angeles',
+            'Pacific': 'America/Los_Angeles',
+            'Pacific Time': 'America/Los_Angeles',
+            'MST': 'America/Denver',
+            'MDT': 'America/Denver',
+            'Mountain': 'America/Denver',
+            'Mountain Time': 'America/Denver',
+            'CST': 'America/Chicago',
+            'CDT': 'America/Chicago',
+            'Central': 'America/Chicago',
+            'Central Time': 'America/Chicago',
+            'EST': 'America/New_York',
+            'EDT': 'America/New_York',
+            'Eastern': 'America/New_York',
+            'Eastern Time': 'America/New_York',
+            'GMT': 'Europe/London',
+            'BST': 'Europe/London',
+            'UTC': 'UTC',
+            'CET': 'Europe/Paris',
+            'CEST': 'Europe/Paris',
+            'IST': 'Asia/Kolkata',
+            'JST': 'Asia/Tokyo',
+            'AEST': 'Australia/Sydney',
+            'AEDT': 'Australia/Sydney',
+            'AWST': 'Australia/Perth',
+            'NZST': 'Pacific/Auckland',
+            'NZDT': 'Pacific/Auckland',
+            'SGT': 'Asia/Singapore',
+            'HKT': 'Asia/Hong_Kong',
+            'KST': 'Asia/Seoul',
+            'ICT': 'Asia/Bangkok',
+            'WIB': 'Asia/Jakarta',
+            'GST': 'Asia/Dubai',
+            
+            // Country names
+            'UK': 'Europe/London',
+            'United Kingdom': 'Europe/London',
+            'Britain': 'Europe/London',
+            'England': 'Europe/London',
+            'USA': 'America/New_York',
+            'US': 'America/New_York',
+            'United States': 'America/New_York',
+            'America': 'America/New_York',
+            'Germany': 'Europe/Berlin',
+            'France': 'Europe/Paris',
+            'Spain': 'Europe/Madrid',
+            'Italy': 'Europe/Rome',
+            'Netherlands': 'Europe/Amsterdam',
+            'Switzerland': 'Europe/Zurich',
+            'Australia': 'Australia/Sydney',
+            'Japan': 'Asia/Tokyo',
+            'China': 'Asia/Shanghai',
+            'India': 'Asia/Kolkata',
+            'South Korea': 'Asia/Seoul',
+            'Korea': 'Asia/Seoul',
+            'Thailand': 'Asia/Bangkok',
+            'Vietnam': 'Asia/Ho_Chi_Minh',
+            'Indonesia': 'Asia/Jakarta',
+            'Malaysia': 'Asia/Kuala_Lumpur',
+            'Philippines': 'Asia/Manila',
+            'UAE': 'Asia/Dubai',
+            'Saudi Arabia': 'Asia/Riyadh',
+            'Israel': 'Asia/Jerusalem',
+            'Turkey': 'Europe/Istanbul',
+            'Russia': 'Europe/Moscow',
+            'Brazil': 'America/Sao_Paulo',
+            'Mexico': 'America/Mexico_City',
+            'Canada': 'America/Toronto',
+            'New Zealand': 'Pacific/Auckland',
+            'South Africa': 'Africa/Johannesburg',
+            'Egypt': 'Africa/Cairo',
+            'Nigeria': 'Africa/Lagos',
+            'Ireland': 'Europe/Dublin',
+            'Portugal': 'Europe/Lisbon',
+            'Poland': 'Europe/Warsaw',
+            'Sweden': 'Europe/Stockholm',
+            'Norway': 'Europe/Oslo',
+            'Denmark': 'Europe/Copenhagen',
+            'Finland': 'Europe/Helsinki',
+            'Greece': 'Europe/Athens',
+            'Austria': 'Europe/Vienna',
+            'Belgium': 'Europe/Brussels',
+            'Czech Republic': 'Europe/Prague',
+            'Argentina': 'America/Argentina/Buenos_Aires',
+            'Chile': 'America/Santiago',
+            'Colombia': 'America/Bogota',
+            'Peru': 'America/Lima',
+            'Pakistan': 'Asia/Karachi',
+            'Bangladesh': 'Asia/Dhaka',
+            'Taiwan': 'Asia/Taipei',
+            'Qatar': 'Asia/Qatar',
+            'Kuwait': 'Asia/Kuwait',
+            'Hawaii': 'Pacific/Honolulu',
+            'Alaska': 'America/Anchorage',
+            
+            // Cities
+            'NYC': 'America/New_York',
+            'New York': 'America/New_York',
+            'LA': 'America/Los_Angeles',
+            'SF': 'America/Los_Angeles',
+            'San Francisco': 'America/Los_Angeles',
+            'London': 'Europe/London',
+            'Paris': 'Europe/Paris',
+            'Tokyo': 'Asia/Tokyo',
+            'Sydney': 'Australia/Sydney',
+            'Dubai': 'Asia/Dubai',
+            'Singapore': 'Asia/Singapore',
+            'Hong Kong': 'Asia/Hong_Kong',
+            'Mumbai': 'Asia/Kolkata',
+            'Delhi': 'Asia/Kolkata',
+            'Bangkok': 'Asia/Bangkok',
+            'Seoul': 'Asia/Seoul',
+            'Beijing': 'Asia/Shanghai',
+            'Shanghai': 'Asia/Shanghai',
+            'Moscow': 'Europe/Moscow',
+            'Berlin': 'Europe/Berlin',
+            'Amsterdam': 'Europe/Amsterdam',
+            'Toronto': 'America/Toronto',
+            'Vancouver': 'America/Vancouver',
+            'Chicago': 'America/Chicago',
+            'Denver': 'America/Denver',
+            'Phoenix': 'America/Phoenix',
+            'Seattle': 'America/Los_Angeles',
+            'Boston': 'America/New_York',
+            'Miami': 'America/New_York',
+            'Atlanta': 'America/New_York',
+            'Dallas': 'America/Chicago',
+            'Houston': 'America/Chicago',
+            'Salt Lake City': 'America/Denver',
+            'Las Vegas': 'America/Los_Angeles',
+            'Melbourne': 'Australia/Melbourne',
+            'Auckland': 'Pacific/Auckland',
+            'Cairo': 'Africa/Cairo',
+            'Lagos': 'Africa/Lagos',
+            'Johannesburg': 'Africa/Johannesburg',
+            'Cape Town': 'Africa/Johannesburg',
+            'São Paulo': 'America/Sao_Paulo',
+            'Rio': 'America/Sao_Paulo',
+            'Mexico City': 'America/Mexico_City',
+            'Buenos Aires': 'America/Argentina/Buenos_Aires',
+            'Lima': 'America/Lima',
+            'Bogota': 'America/Bogota',
+            'Santiago': 'America/Santiago',
+            'Rome': 'Europe/Rome',
+            'Madrid': 'Europe/Madrid',
+            'Barcelona': 'Europe/Madrid',
+            'Lisbon': 'Europe/Lisbon',
+            'Vienna': 'Europe/Vienna',
+            'Prague': 'Europe/Prague',
+            'Warsaw': 'Europe/Warsaw',
+            'Stockholm': 'Europe/Stockholm',
+            'Oslo': 'Europe/Oslo',
+            'Copenhagen': 'Europe/Copenhagen',
+            'Helsinki': 'Europe/Helsinki',
+            'Dublin': 'Europe/Dublin',
+            'Edinburgh': 'Europe/London',
+            'Manchester': 'Europe/London',
+            'Brussels': 'Europe/Brussels',
+            'Zurich': 'Europe/Zurich',
+            'Geneva': 'Europe/Zurich',
+            'Munich': 'Europe/Berlin',
+            'Frankfurt': 'Europe/Berlin',
+            'Istanbul': 'Europe/Istanbul',
+            'Athens': 'Europe/Athens',
+            'Tel Aviv': 'Asia/Jerusalem',
+            'Jerusalem': 'Asia/Jerusalem',
+            'Riyadh': 'Asia/Riyadh',
+            'Kuwait': 'Asia/Kuwait',
+            'Doha': 'Asia/Qatar',
+            'Karachi': 'Asia/Karachi',
+            'Lahore': 'Asia/Karachi',
+            'Dhaka': 'Asia/Dhaka',
+            'Kolkata': 'Asia/Kolkata',
+            'Bangalore': 'Asia/Kolkata',
+            'Chennai': 'Asia/Kolkata',
+            'Hyderabad': 'Asia/Kolkata',
+            'Kuala Lumpur': 'Asia/Kuala_Lumpur',
+            'Jakarta': 'Asia/Jakarta',
+            'Manila': 'Asia/Manila',
+            'Ho Chi Minh': 'Asia/Ho_Chi_Minh',
+            'Hanoi': 'Asia/Bangkok',
+            'Taipei': 'Asia/Taipei',
+            'Osaka': 'Asia/Tokyo',
+            'Kyoto': 'Asia/Tokyo',
+            'Perth': 'Australia/Perth',
+            'Brisbane': 'Australia/Brisbane',
+            'Honolulu': 'Pacific/Honolulu',
+            'Anchorage': 'America/Anchorage',
+            
+            // Additional countries - Africa
+            'Gambia': 'Africa/Banjul',
+            'The Gambia': 'Africa/Banjul',
+            'Banjul': 'Africa/Banjul',
+            'Congo': 'Africa/Kinshasa',
+            'DRC': 'Africa/Kinshasa',
+            'Democratic Republic of Congo': 'Africa/Kinshasa',
+            'DR Congo': 'Africa/Kinshasa',
+            'Kinshasa': 'Africa/Kinshasa',
+            'Lubumbashi': 'Africa/Lubumbashi',
+            'Kenya': 'Africa/Nairobi',
+            'Nairobi': 'Africa/Nairobi',
+            'Ghana': 'Africa/Accra',
+            'Accra': 'Africa/Accra',
+            'Ethiopia': 'Africa/Addis_Ababa',
+            'Addis Ababa': 'Africa/Addis_Ababa',
+            'Morocco': 'Africa/Casablanca',
+            'Casablanca': 'Africa/Casablanca',
+            'Tanzania': 'Africa/Dar_es_Salaam',
+            'Dar es Salaam': 'Africa/Dar_es_Salaam',
+            'Uganda': 'Africa/Kampala',
+            'Kampala': 'Africa/Kampala',
+            'Zimbabwe': 'Africa/Harare',
+            'Harare': 'Africa/Harare',
+            'Senegal': 'Africa/Dakar',
+            'Dakar': 'Africa/Dakar',
+            'Tunisia': 'Africa/Tunis',
+            'Tunis': 'Africa/Tunis',
+            'Algeria': 'Africa/Algiers',
+            'Algiers': 'Africa/Algiers',
+            'Angola': 'Africa/Luanda',
+            'Luanda': 'Africa/Luanda',
+            'Rwanda': 'Africa/Kigali',
+            'Kigali': 'Africa/Kigali',
+            
+            // Additional cities - India
+            'New Delhi': 'Asia/Kolkata',
+            'Pune': 'Asia/Kolkata',
+            'Ahmedabad': 'Asia/Kolkata',
+            'Jaipur': 'Asia/Kolkata',
+            'Goa': 'Asia/Kolkata',
+            
+            // Additional countries - Europe
+            'Hungary': 'Europe/Budapest',
+            'Budapest': 'Europe/Budapest',
+            'Romania': 'Europe/Bucharest',
+            'Bucharest': 'Europe/Bucharest',
+            'Bulgaria': 'Europe/Sofia',
+            'Sofia': 'Europe/Sofia',
+            'Croatia': 'Europe/Zagreb',
+            'Zagreb': 'Europe/Zagreb',
+            'Serbia': 'Europe/Belgrade',
+            'Belgrade': 'Europe/Belgrade',
+            'Ukraine': 'Europe/Kiev',
+            'Kiev': 'Europe/Kiev',
+            'Kyiv': 'Europe/Kiev',
+            'Slovakia': 'Europe/Bratislava',
+            'Bratislava': 'Europe/Bratislava',
+            'Slovenia': 'Europe/Ljubljana',
+            'Ljubljana': 'Europe/Ljubljana',
+            'Luxembourg': 'Europe/Luxembourg',
+            'Malta': 'Europe/Malta',
+            'Iceland': 'Atlantic/Reykjavik',
+            'Reykjavik': 'Atlantic/Reykjavik',
+            'Scotland': 'Europe/London',
+            'Wales': 'Europe/London',
+            'Northern Ireland': 'Europe/London',
+            
+            // Additional countries - Americas
+            'Costa Rica': 'America/Costa_Rica',
+            'San Jose': 'America/Costa_Rica',
+            'Panama': 'America/Panama',
+            'Ecuador': 'America/Guayaquil',
+            'Quito': 'America/Guayaquil',
+            'Venezuela': 'America/Caracas',
+            'Caracas': 'America/Caracas',
+            'Uruguay': 'America/Montevideo',
+            'Montevideo': 'America/Montevideo',
+            'Paraguay': 'America/Asuncion',
+            'Asuncion': 'America/Asuncion',
+            'Bolivia': 'America/La_Paz',
+            'La Paz': 'America/La_Paz',
+            'Puerto Rico': 'America/Puerto_Rico',
+            'San Juan': 'America/Puerto_Rico',
+            'Dominican Republic': 'America/Santo_Domingo',
+            'Santo Domingo': 'America/Santo_Domingo',
+            'Jamaica': 'America/Jamaica',
+            'Cuba': 'America/Havana',
+            'Havana': 'America/Havana',
+            'Guatemala': 'America/Guatemala',
+            'Honduras': 'America/Tegucigalpa',
+            'El Salvador': 'America/El_Salvador',
+            'Nicaragua': 'America/Managua',
+            'Montreal': 'America/Montreal',
+            'Calgary': 'America/Edmonton',
+            'Edmonton': 'America/Edmonton',
+            'Winnipeg': 'America/Winnipeg',
+            'Ottawa': 'America/Toronto',
+            'Detroit': 'America/Detroit',
+            'Philadelphia': 'America/New_York',
+            'Washington DC': 'America/New_York',
+            'Washington': 'America/New_York',
+            'San Diego': 'America/Los_Angeles',
+            'Portland': 'America/Los_Angeles',
+            'Austin': 'America/Chicago',
+            'Minneapolis': 'America/Chicago',
+            'Nashville': 'America/Chicago',
+            'New Orleans': 'America/Chicago',
+            'Indianapolis': 'America/Indiana/Indianapolis',
+            'Columbus': 'America/New_York',
+            'Charlotte': 'America/New_York',
+            'Orlando': 'America/New_York',
+            
+            // Additional countries - Asia/Middle East
+            'Sri Lanka': 'Asia/Colombo',
+            'Colombo': 'Asia/Colombo',
+            'Nepal': 'Asia/Kathmandu',
+            'Kathmandu': 'Asia/Kathmandu',
+            'Myanmar': 'Asia/Yangon',
+            'Burma': 'Asia/Yangon',
+            'Yangon': 'Asia/Yangon',
+            'Cambodia': 'Asia/Phnom_Penh',
+            'Phnom Penh': 'Asia/Phnom_Penh',
+            'Laos': 'Asia/Vientiane',
+            'Vientiane': 'Asia/Vientiane',
+            'Brunei': 'Asia/Brunei',
+            'Mongolia': 'Asia/Ulaanbaatar',
+            'Ulaanbaatar': 'Asia/Ulaanbaatar',
+            'Kazakhstan': 'Asia/Almaty',
+            'Almaty': 'Asia/Almaty',
+            'Uzbekistan': 'Asia/Tashkent',
+            'Tashkent': 'Asia/Tashkent',
+            'Azerbaijan': 'Asia/Baku',
+            'Baku': 'Asia/Baku',
+            'Georgia': 'Asia/Tbilisi',
+            'Tbilisi': 'Asia/Tbilisi',
+            'Armenia': 'Asia/Yerevan',
+            'Yerevan': 'Asia/Yerevan',
+            'Jordan': 'Asia/Amman',
+            'Amman': 'Asia/Amman',
+            'Lebanon': 'Asia/Beirut',
+            'Beirut': 'Asia/Beirut',
+            'Oman': 'Asia/Muscat',
+            'Muscat': 'Asia/Muscat',
+            'Bahrain': 'Asia/Bahrain',
+            'Iraq': 'Asia/Baghdad',
+            'Baghdad': 'Asia/Baghdad',
+            'Iran': 'Asia/Tehran',
+            'Tehran': 'Asia/Tehran',
+            'Afghanistan': 'Asia/Kabul',
+            'Kabul': 'Asia/Kabul',
+            'Shenzhen': 'Asia/Shanghai',
+            'Guangzhou': 'Asia/Shanghai',
+            'Chengdu': 'Asia/Shanghai',
+            'Macau': 'Asia/Macau',
+            'Macao': 'Asia/Macau',
+            
+            // Additional - Oceania
+            'Fiji': 'Pacific/Fiji',
+            'Suva': 'Pacific/Fiji',
+            'Papua New Guinea': 'Pacific/Port_Moresby',
+            'Guam': 'Pacific/Guam',
+            'Samoa': 'Pacific/Apia',
+            'Tahiti': 'Pacific/Tahiti',
+            'New Caledonia': 'Pacific/Noumea',
+            'Adelaide': 'Australia/Adelaide',
+            'Darwin': 'Australia/Darwin',
+            'Hobart': 'Australia/Hobart',
+            'Canberra': 'Australia/Sydney',
+            
+            // ==================== EXPANDED CITIES ====================
+            // Major world cities
+            'Saigon': 'Asia/Ho_Chi_Minh',
+            'HCMC': 'Asia/Ho_Chi_Minh',
+            'Ho Chi Minh City': 'Asia/Ho_Chi_Minh',
+            'Bombay': 'Asia/Kolkata',
+            'Calcutta': 'Asia/Kolkata',
+            'Madras': 'Asia/Kolkata',
+            'Bengaluru': 'Asia/Kolkata',
+            'Peking': 'Asia/Shanghai',
+            'Canton': 'Asia/Shanghai',
+            'Hongkong': 'Asia/Hong_Kong',
+            'Saõ Paulo': 'America/Sao_Paulo',
+            'Sao Paolo': 'America/Sao_Paulo',
+            'Rio de Janeiro': 'America/Sao_Paulo',
+            'Rio De Janeiro': 'America/Sao_Paulo',
+            
+            // US Cities - comprehensive
+            'New York City': 'America/New_York',
+            'Manhattan': 'America/New_York',
+            'Brooklyn': 'America/New_York',
+            'Queens': 'America/New_York',
+            'Bronx': 'America/New_York',
+            'Staten Island': 'America/New_York',
+            'Los Angeles': 'America/Los_Angeles',
+            'Hollywood': 'America/Los_Angeles',
+            'Beverly Hills': 'America/Los_Angeles',
+            'Santa Monica': 'America/Los_Angeles',
+            'Pasadena': 'America/Los_Angeles',
+            'Long Beach': 'America/Los_Angeles',
+            'Irvine': 'America/Los_Angeles',
+            'Anaheim': 'America/Los_Angeles',
+            'Oakland': 'America/Los_Angeles',
+            'San Jose California': 'America/Los_Angeles',
+            'Silicon Valley': 'America/Los_Angeles',
+            'Palo Alto': 'America/Los_Angeles',
+            'Mountain View': 'America/Los_Angeles',
+            'Cupertino': 'America/Los_Angeles',
+            'Sacramento': 'America/Los_Angeles',
+            'Fresno': 'America/Los_Angeles',
+            'San Bernardino': 'America/Los_Angeles',
+            'Riverside': 'America/Los_Angeles',
+            'Baltimore': 'America/New_York',
+            'Pittsburgh': 'America/New_York',
+            'Cleveland': 'America/New_York',
+            'Cincinnati': 'America/New_York',
+            'Buffalo': 'America/New_York',
+            'Rochester': 'America/New_York',
+            'Syracuse': 'America/New_York',
+            'Albany': 'America/New_York',
+            'Newark': 'America/New_York',
+            'Jersey City': 'America/New_York',
+            'Trenton': 'America/New_York',
+            'Hartford': 'America/New_York',
+            'Providence': 'America/New_York',
+            'Richmond': 'America/New_York',
+            'Norfolk': 'America/New_York',
+            'Virginia Beach': 'America/New_York',
+            'Raleigh': 'America/New_York',
+            'Durham': 'America/New_York',
+            'Greensboro': 'America/New_York',
+            'Charleston': 'America/New_York',
+            'Columbia': 'America/New_York',
+            'Savannah': 'America/New_York',
+            'Jacksonville': 'America/New_York',
+            'Tampa': 'America/New_York',
+            'St Petersburg': 'America/New_York',
+            'Fort Lauderdale': 'America/New_York',
+            'West Palm Beach': 'America/New_York',
+            'Memphis': 'America/Chicago',
+            'St Louis': 'America/Chicago',
+            'Kansas City': 'America/Chicago',
+            'Omaha': 'America/Chicago',
+            'Milwaukee': 'America/Chicago',
+            'Madison': 'America/Chicago',
+            'Des Moines': 'America/Chicago',
+            'Oklahoma City': 'America/Chicago',
+            'Tulsa': 'America/Chicago',
+            'San Antonio': 'America/Chicago',
+            'Fort Worth': 'America/Chicago',
+            'El Paso': 'America/Denver',
+            'Albuquerque': 'America/Denver',
+            'Santa Fe': 'America/Denver',
+            'Tucson': 'America/Phoenix',
+            'Mesa': 'America/Phoenix',
+            'Scottsdale': 'America/Phoenix',
+            'Reno': 'America/Los_Angeles',
+            'Boise': 'America/Boise',
+            'Spokane': 'America/Los_Angeles',
+            'Tacoma': 'America/Los_Angeles',
+            'Olympia': 'America/Los_Angeles',
+            'Eugene': 'America/Los_Angeles',
+            'Salem': 'America/Los_Angeles',
+            
+            // Canada Cities
+            'Quebec City': 'America/Toronto',
+            'Quebec': 'America/Toronto',
+            'Halifax': 'America/Halifax',
+            'Victoria': 'America/Vancouver',
+            'Saskatoon': 'America/Regina',
+            'Regina': 'America/Regina',
+            'St Johns': 'America/St_Johns',
+            'Newfoundland': 'America/St_Johns',
+            
+            // UK Cities
+            'Birmingham': 'Europe/London',
+            'Leeds': 'Europe/London',
+            'Glasgow': 'Europe/London',
+            'Liverpool': 'Europe/London',
+            'Bristol': 'Europe/London',
+            'Sheffield': 'Europe/London',
+            'Newcastle': 'Europe/London',
+            'Nottingham': 'Europe/London',
+            'Southampton': 'Europe/London',
+            'Leicester': 'Europe/London',
+            'Coventry': 'Europe/London',
+            'Belfast': 'Europe/London',
+            'Cardiff': 'Europe/London',
+            'Aberdeen': 'Europe/London',
+            'Cambridge': 'Europe/London',
+            'Oxford': 'Europe/London',
+            'Brighton': 'Europe/London',
+            'Reading': 'Europe/London',
+            'Bournemouth': 'Europe/London',
+            
+            // European Cities
+            'Lyon': 'Europe/Paris',
+            'Marseille': 'Europe/Paris',
+            'Nice': 'Europe/Paris',
+            'Toulouse': 'Europe/Paris',
+            'Bordeaux': 'Europe/Paris',
+            'Strasbourg': 'Europe/Paris',
+            'Nantes': 'Europe/Paris',
+            'Lille': 'Europe/Paris',
+            'Hamburg': 'Europe/Berlin',
+            'Cologne': 'Europe/Berlin',
+            'Koln': 'Europe/Berlin',
+            'Dusseldorf': 'Europe/Berlin',
+            'Stuttgart': 'Europe/Berlin',
+            'Dortmund': 'Europe/Berlin',
+            'Essen': 'Europe/Berlin',
+            'Leipzig': 'Europe/Berlin',
+            'Dresden': 'Europe/Berlin',
+            'Hannover': 'Europe/Berlin',
+            'Nuremberg': 'Europe/Berlin',
+            'Milan': 'Europe/Rome',
+            'Milano': 'Europe/Rome',
+            'Naples': 'Europe/Rome',
+            'Napoli': 'Europe/Rome',
+            'Turin': 'Europe/Rome',
+            'Torino': 'Europe/Rome',
+            'Florence': 'Europe/Rome',
+            'Firenze': 'Europe/Rome',
+            'Venice': 'Europe/Rome',
+            'Venezia': 'Europe/Rome',
+            'Bologna': 'Europe/Rome',
+            'Genoa': 'Europe/Rome',
+            'Palermo': 'Europe/Rome',
+            'Valencia': 'Europe/Madrid',
+            'Seville': 'Europe/Madrid',
+            'Sevilla': 'Europe/Madrid',
+            'Bilbao': 'Europe/Madrid',
+            'Malaga': 'Europe/Madrid',
+            'Zaragoza': 'Europe/Madrid',
+            'Palma': 'Europe/Madrid',
+            'Mallorca': 'Europe/Madrid',
+            'Ibiza': 'Europe/Madrid',
+            'Canary Islands': 'Atlantic/Canary',
+            'Tenerife': 'Atlantic/Canary',
+            'Gran Canaria': 'Atlantic/Canary',
+            'Porto': 'Europe/Lisbon',
+            'Oporto': 'Europe/Lisbon',
+            'Rotterdam': 'Europe/Amsterdam',
+            'The Hague': 'Europe/Amsterdam',
+            'Den Haag': 'Europe/Amsterdam',
+            'Utrecht': 'Europe/Amsterdam',
+            'Eindhoven': 'Europe/Amsterdam',
+            'Antwerp': 'Europe/Brussels',
+            'Ghent': 'Europe/Brussels',
+            'Bruges': 'Europe/Brussels',
+            'Krakow': 'Europe/Warsaw',
+            'Cracow': 'Europe/Warsaw',
+            'Gdansk': 'Europe/Warsaw',
+            'Wroclaw': 'Europe/Warsaw',
+            'Poznan': 'Europe/Warsaw',
+            'Gothenburg': 'Europe/Stockholm',
+            'Malmo': 'Europe/Stockholm',
+            'Bergen': 'Europe/Oslo',
+            'Trondheim': 'Europe/Oslo',
+            'Aarhus': 'Europe/Copenhagen',
+            'Odense': 'Europe/Copenhagen',
+            'Espoo': 'Europe/Helsinki',
+            'Tampere': 'Europe/Helsinki',
+            'Turku': 'Europe/Helsinki',
+            'Thessaloniki': 'Europe/Athens',
+            'Salonica': 'Europe/Athens',
+            'Crete': 'Europe/Athens',
+            'Rhodes': 'Europe/Athens',
+            'Corfu': 'Europe/Athens',
+            'Mykonos': 'Europe/Athens',
+            'Santorini': 'Europe/Athens',
+            'Brno': 'Europe/Prague',
+            'Ostrava': 'Europe/Prague',
+            'Graz': 'Europe/Vienna',
+            'Salzburg': 'Europe/Vienna',
+            'Innsbruck': 'Europe/Vienna',
+            'Basel': 'Europe/Zurich',
+            'Bern': 'Europe/Zurich',
+            'Lausanne': 'Europe/Zurich',
+            'Odessa': 'Europe/Kiev',
+            'Lviv': 'Europe/Kiev',
+            'Kharkiv': 'Europe/Kiev',
+            'Dnipro': 'Europe/Kiev',
+            'Minsk': 'Europe/Minsk',
+            'St Petersburg Russia': 'Europe/Moscow',
+            'Saint Petersburg': 'Europe/Moscow',
+            'Novosibirsk': 'Asia/Novosibirsk',
+            'Yekaterinburg': 'Asia/Yekaterinburg',
+            'Vladivostok': 'Asia/Vladivostok',
+            'Sochi': 'Europe/Moscow',
+            'Kazan': 'Europe/Moscow',
+            
+            // Asian Cities
+            'Yokohama': 'Asia/Tokyo',
+            'Nagoya': 'Asia/Tokyo',
+            'Sapporo': 'Asia/Tokyo',
+            'Kobe': 'Asia/Tokyo',
+            'Fukuoka': 'Asia/Tokyo',
+            'Hiroshima': 'Asia/Tokyo',
+            'Nara': 'Asia/Tokyo',
+            'Okinawa': 'Asia/Tokyo',
+            'Busan': 'Asia/Seoul',
+            'Incheon': 'Asia/Seoul',
+            'Daegu': 'Asia/Seoul',
+            'Jeju': 'Asia/Seoul',
+            'Wuhan': 'Asia/Shanghai',
+            'Hangzhou': 'Asia/Shanghai',
+            'Nanjing': 'Asia/Shanghai',
+            'Xian': 'Asia/Shanghai',
+            'Suzhou': 'Asia/Shanghai',
+            'Tianjin': 'Asia/Shanghai',
+            'Chongqing': 'Asia/Shanghai',
+            'Qingdao': 'Asia/Shanghai',
+            'Dalian': 'Asia/Shanghai',
+            'Xiamen': 'Asia/Shanghai',
+            'Kunming': 'Asia/Shanghai',
+            'Harbin': 'Asia/Shanghai',
+            'Changsha': 'Asia/Shanghai',
+            'Zhengzhou': 'Asia/Shanghai',
+            'Dongguan': 'Asia/Shanghai',
+            'Foshan': 'Asia/Shanghai',
+            'Shenyang': 'Asia/Shanghai',
+            'Jinan': 'Asia/Shanghai',
+            'Hefei': 'Asia/Shanghai',
+            'Urumqi': 'Asia/Urumqi',
+            'Lhasa': 'Asia/Shanghai',
+            'Tibet': 'Asia/Shanghai',
+            'Kowloon': 'Asia/Hong_Kong',
+            'Taichung': 'Asia/Taipei',
+            'Kaohsiung': 'Asia/Taipei',
+            'Tainan': 'Asia/Taipei',
+            'Penang': 'Asia/Kuala_Lumpur',
+            'George Town': 'Asia/Kuala_Lumpur',
+            'Johor Bahru': 'Asia/Kuala_Lumpur',
+            'JB': 'Asia/Kuala_Lumpur',
+            'Malacca': 'Asia/Kuala_Lumpur',
+            'Melaka': 'Asia/Kuala_Lumpur',
+            'Ipoh': 'Asia/Kuala_Lumpur',
+            'Kota Kinabalu': 'Asia/Kuala_Lumpur',
+            'Kuching': 'Asia/Kuala_Lumpur',
+            'Surabaya': 'Asia/Jakarta',
+            'Bandung': 'Asia/Jakarta',
+            'Medan': 'Asia/Jakarta',
+            'Yogyakarta': 'Asia/Jakarta',
+            'Jogjakarta': 'Asia/Jakarta',
+            'Bali': 'Asia/Makassar',
+            'Denpasar': 'Asia/Makassar',
+            'Makassar': 'Asia/Makassar',
+            'Cebu': 'Asia/Manila',
+            'Davao': 'Asia/Manila',
+            'Makati': 'Asia/Manila',
+            'BGC': 'Asia/Manila',
+            'Quezon City': 'Asia/Manila',
+            'Chiang Mai': 'Asia/Bangkok',
+            'Phuket': 'Asia/Bangkok',
+            'Pattaya': 'Asia/Bangkok',
+            'Krabi': 'Asia/Bangkok',
+            'Koh Samui': 'Asia/Bangkok',
+            'Siem Reap': 'Asia/Phnom_Penh',
+            'Angkor': 'Asia/Phnom_Penh',
+            'Da Nang': 'Asia/Ho_Chi_Minh',
+            'Danang': 'Asia/Ho_Chi_Minh',
+            'Hoi An': 'Asia/Ho_Chi_Minh',
+            'Nha Trang': 'Asia/Ho_Chi_Minh',
+            'Halong': 'Asia/Ho_Chi_Minh',
+            'Luang Prabang': 'Asia/Vientiane',
+            'Rangoon': 'Asia/Yangon',
+            'Mandalay': 'Asia/Yangon',
+            'Bagan': 'Asia/Yangon',
+            'Pokhara': 'Asia/Kathmandu',
+            'Gurgaon': 'Asia/Kolkata',
+            'Gurugram': 'Asia/Kolkata',
+            'Noida': 'Asia/Kolkata',
+            'Chandigarh': 'Asia/Kolkata',
+            'Lucknow': 'Asia/Kolkata',
+            'Kanpur': 'Asia/Kolkata',
+            'Nagpur': 'Asia/Kolkata',
+            'Indore': 'Asia/Kolkata',
+            'Thane': 'Asia/Kolkata',
+            'Bhopal': 'Asia/Kolkata',
+            'Visakhapatnam': 'Asia/Kolkata',
+            'Vizag': 'Asia/Kolkata',
+            'Patna': 'Asia/Kolkata',
+            'Vadodara': 'Asia/Kolkata',
+            'Surat': 'Asia/Kolkata',
+            'Ludhiana': 'Asia/Kolkata',
+            'Agra': 'Asia/Kolkata',
+            'Varanasi': 'Asia/Kolkata',
+            'Nashik': 'Asia/Kolkata',
+            'Faridabad': 'Asia/Kolkata',
+            'Meerut': 'Asia/Kolkata',
+            'Rajkot': 'Asia/Kolkata',
+            'Amritsar': 'Asia/Kolkata',
+            'Allahabad': 'Asia/Kolkata',
+            'Coimbatore': 'Asia/Kolkata',
+            'Jabalpur': 'Asia/Kolkata',
+            'Gwalior': 'Asia/Kolkata',
+            'Vijayawada': 'Asia/Kolkata',
+            'Jodhpur': 'Asia/Kolkata',
+            'Madurai': 'Asia/Kolkata',
+            'Raipur': 'Asia/Kolkata',
+            'Kochi': 'Asia/Kolkata',
+            'Cochin': 'Asia/Kolkata',
+            'Kerala': 'Asia/Kolkata',
+            'Trivandrum': 'Asia/Kolkata',
+            'Thiruvananthapuram': 'Asia/Kolkata',
+            'Mysore': 'Asia/Kolkata',
+            'Mysuru': 'Asia/Kolkata',
+            'Mangalore': 'Asia/Kolkata',
+            'Pondicherry': 'Asia/Kolkata',
+            'Puducherry': 'Asia/Kolkata',
+            'Shimla': 'Asia/Kolkata',
+            'Darjeeling': 'Asia/Kolkata',
+            'Guwahati': 'Asia/Kolkata',
+            'Shillong': 'Asia/Kolkata',
+            'Faisalabad': 'Asia/Karachi',
+            'Rawalpindi': 'Asia/Karachi',
+            'Multan': 'Asia/Karachi',
+            'Islamabad': 'Asia/Karachi',
+            'Peshawar': 'Asia/Karachi',
+            'Quetta': 'Asia/Karachi',
+            'Chittagong': 'Asia/Dhaka',
+            'Sylhet': 'Asia/Dhaka',
+            'Jeddah': 'Asia/Riyadh',
+            'Mecca': 'Asia/Riyadh',
+            'Makkah': 'Asia/Riyadh',
+            'Medina': 'Asia/Riyadh',
+            'Madinah': 'Asia/Riyadh',
+            'Dammam': 'Asia/Riyadh',
+            'Abu Dhabi': 'Asia/Dubai',
+            'Sharjah': 'Asia/Dubai',
+            'Ajman': 'Asia/Dubai',
+            'Ras Al Khaimah': 'Asia/Dubai',
+            'Fujairah': 'Asia/Dubai',
+            'Manama': 'Asia/Bahrain',
+            'Salalah': 'Asia/Muscat',
+            'Basra': 'Asia/Baghdad',
+            'Erbil': 'Asia/Baghdad',
+            'Mosul': 'Asia/Baghdad',
+            'Aleppo': 'Asia/Damascus',
+            'Isfahan': 'Asia/Tehran',
+            'Shiraz': 'Asia/Tehran',
+            'Tabriz': 'Asia/Tehran',
+            'Mashhad': 'Asia/Tehran',
+            'Astana': 'Asia/Almaty',
+            'Nur Sultan': 'Asia/Almaty',
+            'Bishkek': 'Asia/Bishkek',
+            'Dushanbe': 'Asia/Dushanbe',
+            'Ashgabat': 'Asia/Ashgabat',
+            
+            // African Cities
+            'Alexandria': 'Africa/Cairo',
+            'Giza': 'Africa/Cairo',
+            'Luxor': 'Africa/Cairo',
+            'Sharm El Sheikh': 'Africa/Cairo',
+            'Hurghada': 'Africa/Cairo',
+            'Abuja': 'Africa/Lagos',
+            'Port Harcourt': 'Africa/Lagos',
+            'Kano': 'Africa/Lagos',
+            'Ibadan': 'Africa/Lagos',
+            'Benin City': 'Africa/Lagos',
+            'Pretoria': 'Africa/Johannesburg',
+            'Durban': 'Africa/Johannesburg',
+            'Port Elizabeth': 'Africa/Johannesburg',
+            'Soweto': 'Africa/Johannesburg',
+            'Bloemfontein': 'Africa/Johannesburg',
+            'Marrakech': 'Africa/Casablanca',
+            'Marrakesh': 'Africa/Casablanca',
+            'Rabat': 'Africa/Casablanca',
+            'Fez': 'Africa/Casablanca',
+            'Tangier': 'Africa/Casablanca',
+            'Agadir': 'Africa/Casablanca',
+            'Mombasa': 'Africa/Nairobi',
+            'Zanzibar': 'Africa/Dar_es_Salaam',
+            'Arusha': 'Africa/Dar_es_Salaam',
+            'Victoria Falls': 'Africa/Harare',
+            'Livingstone': 'Africa/Lusaka',
+            'Windhoek': 'Africa/Windhoek',
+            'Gaborone': 'Africa/Gaborone',
+            'Antananarivo': 'Indian/Antananarivo',
+            'Tana': 'Indian/Antananarivo',
+            
+            // Australian Cities
+            'Gold Coast': 'Australia/Brisbane',
+            'Sunshine Coast': 'Australia/Brisbane',
+            'Cairns': 'Australia/Brisbane',
+            'Townsville': 'Australia/Brisbane',
+            'Newcastle Australia': 'Australia/Sydney',
+            'Wollongong': 'Australia/Sydney',
+            'Geelong': 'Australia/Melbourne',
+            'Ballarat': 'Australia/Melbourne',
+            'Bendigo': 'Australia/Melbourne',
+            'Launceston': 'Australia/Hobart',
+            'Alice Springs': 'Australia/Darwin',
+            'Broome': 'Australia/Perth',
+            'Fremantle': 'Australia/Perth',
+            
+            // New Zealand Cities
+            'Wellington': 'Pacific/Auckland',
+            'Christchurch': 'Pacific/Auckland',
+            'Hamilton': 'Pacific/Auckland',
+            'Queenstown': 'Pacific/Auckland',
+            'Dunedin': 'Pacific/Auckland',
+            'Rotorua': 'Pacific/Auckland',
+            'Tauranga': 'Pacific/Auckland',
+            
+            // Latin American Cities
+            'Guadalajara': 'America/Mexico_City',
+            'Monterrey': 'America/Monterrey',
+            'Cancun': 'America/Cancun',
+            'Tijuana': 'America/Tijuana',
+            'Playa del Carmen': 'America/Cancun',
+            'Puerto Vallarta': 'America/Mexico_City',
+            'Cabo': 'America/Mazatlan',
+            'Los Cabos': 'America/Mazatlan',
+            'Oaxaca': 'America/Mexico_City',
+            'Merida': 'America/Merida',
+            'Havana Cuba': 'America/Havana',
+            'Varadero': 'America/Havana',
+            'Kingston Jamaica': 'America/Jamaica',
+            'Montego Bay': 'America/Jamaica',
+            'Punta Cana': 'America/Santo_Domingo',
+            'Nassau': 'America/Nassau',
+            'San Juan PR': 'America/Puerto_Rico',
+            'Cartagena': 'America/Bogota',
+            'Medellin': 'America/Bogota',
+            'Cali': 'America/Bogota',
+            'Barranquilla': 'America/Bogota',
+            'Guayaquil': 'America/Guayaquil',
+            'Cuenca': 'America/Guayaquil',
+            'Galapagos': 'Pacific/Galapagos',
+            'Cusco': 'America/Lima',
+            'Cuzco': 'America/Lima',
+            'Machu Picchu': 'America/Lima',
+            'Arequipa': 'America/Lima',
+            'Trujillo': 'America/Lima',
+            'La Paz Bolivia': 'America/La_Paz',
+            'Santa Cruz Bolivia': 'America/La_Paz',
+            'Sucre': 'America/La_Paz',
+            'Uyuni': 'America/La_Paz',
+            'Asuncion': 'America/Asuncion',
+            'Montevideo': 'America/Montevideo',
+            'Punta del Este': 'America/Montevideo',
+            'Cordoba': 'America/Argentina/Cordoba',
+            'Rosario': 'America/Argentina/Buenos_Aires',
+            'Mendoza': 'America/Argentina/Mendoza',
+            'Bariloche': 'America/Argentina/Buenos_Aires',
+            'Ushuaia': 'America/Argentina/Ushuaia',
+            'Valparaiso': 'America/Santiago',
+            'Vina del Mar': 'America/Santiago',
+            'Concepcion': 'America/Santiago',
+            'Patagonia': 'America/Argentina/Buenos_Aires',
+            'Easter Island': 'Pacific/Easter',
+            'Brasilia': 'America/Sao_Paulo',
+            'Salvador': 'America/Bahia',
+            'Fortaleza': 'America/Fortaleza',
+            'Belo Horizonte': 'America/Sao_Paulo',
+            'Curitiba': 'America/Sao_Paulo',
+            'Recife': 'America/Recife',
+            'Porto Alegre': 'America/Sao_Paulo',
+            'Manaus': 'America/Manaus',
+            'Florianopolis': 'America/Sao_Paulo',
+            'Iguazu': 'America/Sao_Paulo',
+            'Foz do Iguacu': 'America/Sao_Paulo',
+            
+            // Caribbean
+            'Aruba': 'America/Aruba',
+            'Curacao': 'America/Curacao',
+            'Bonaire': 'America/Curacao',
+            'St Maarten': 'America/Lower_Princes',
+            'Sint Maarten': 'America/Lower_Princes',
+            'Saint Martin': 'America/Marigot',
+            'St Barts': 'America/St_Barthelemy',
+            'Antigua': 'America/Antigua',
+            'St Lucia': 'America/St_Lucia',
+            'Grenada': 'America/Grenada',
+            'Cayman Islands': 'America/Cayman',
+            'Grand Cayman': 'America/Cayman',
+            'Turks and Caicos': 'America/Grand_Turk',
+            'Virgin Islands': 'America/Virgin',
+            'BVI': 'America/Tortola',
+            'USVI': 'America/Virgin',
+            'St Thomas': 'America/Virgin',
+            'St Croix': 'America/Virgin',
+            'Martinique': 'America/Martinique',
+            'Guadeloupe': 'America/Guadeloupe',
+            
+            // Pacific Islands
+            'Bora Bora': 'Pacific/Tahiti',
+            'Moorea': 'Pacific/Tahiti',
+            'Papeete': 'Pacific/Tahiti',
+            'Nadi': 'Pacific/Fiji',
+            'Noumea': 'Pacific/Noumea',
+            'Port Vila': 'Pacific/Efate',
+            'Rarotonga': 'Pacific/Rarotonga',
+            'Cook Islands': 'Pacific/Rarotonga',
+            'Niue': 'Pacific/Niue',
+            
+            // Common misspellings and variations
+            'Philipines': 'Asia/Manila',
+            'Phillipines': 'Asia/Manila',
+            'Phillippines': 'Asia/Manila',
+            'Malasia': 'Asia/Kuala_Lumpur',
+            'Indonisia': 'Asia/Jakarta',
+            'Tailand': 'Asia/Bangkok',
+            'Veitnam': 'Asia/Ho_Chi_Minh',
+            'Singapour': 'Asia/Singapore',
+            'Signapore': 'Asia/Singapore',
+            'Hongkong': 'Asia/Hong_Kong',
+            'Tokoyo': 'Asia/Tokyo',
+            'Tokio': 'Asia/Tokyo',
+            'Beijin': 'Asia/Shanghai',
+            'Pekin': 'Asia/Shanghai',
+            'Shanghia': 'Asia/Shanghai',
+            'Bombai': 'Asia/Kolkata',
+            'Deli': 'Asia/Kolkata',
+            'Bankok': 'Asia/Bangkok',
+            'Kaula Lumpur': 'Asia/Kuala_Lumpur',
+            'Kualalumpur': 'Asia/Kuala_Lumpur',
+            'Melbourn': 'Australia/Melbourne',
+            'Sydeny': 'Australia/Sydney',
+            'Aukland': 'Pacific/Auckland',
+            'Johanesburg': 'Africa/Johannesburg',
+            'Johannesberg': 'Africa/Johannesburg',
+            'Joberg': 'Africa/Johannesburg',
+            'Duabi': 'Asia/Dubai',
+            'Dubay': 'Asia/Dubai',
+            'Mosco': 'Europe/Moscow',
+            'Moskow': 'Europe/Moscow',
+            'Istambul': 'Europe/Istanbul',
+            'Athen': 'Europe/Athens',
+            'Praque': 'Europe/Prague',
+            'Warshaw': 'Europe/Warsaw',
+            'Budapeste': 'Europe/Budapest',
+            'Bucuresti': 'Europe/Bucharest',
+            'Munchen': 'Europe/Berlin',
+            'Koeln': 'Europe/Berlin',
+            'Wien': 'Europe/Vienna',
+            'Geneve': 'Europe/Zurich',
+            'Zurick': 'Europe/Zurich',
+            'Brussel': 'Europe/Brussels',
+            'Bruxelles': 'Europe/Brussels',
+            'Den Haag': 'Europe/Amsterdam',
+            'Kobenhavn': 'Europe/Copenhagen',
+            'Helsingfors': 'Europe/Helsinki',
+            'Goteborg': 'Europe/Stockholm',
+            'Bucureşti': 'Europe/Bucharest',
+            'Kraków': 'Europe/Warsaw',
+            'Wrocław': 'Europe/Warsaw',
+            'Gdańsk': 'Europe/Warsaw',
+            'Łódź': 'Europe/Warsaw',
+            'Poznań': 'Europe/Warsaw',
+            'München': 'Europe/Berlin',
+            'Köln': 'Europe/Berlin',
+            'Düsseldorf': 'Europe/Berlin',
+            'Nürnberg': 'Europe/Berlin',
+            'Zürich': 'Europe/Zurich',
+            'Genève': 'Europe/Zurich',
+            'São Paulo': 'America/Sao_Paulo',
+            'Bogotá': 'America/Bogota',
+            'Ciudad de México': 'America/Mexico_City',
+            'CDMX': 'America/Mexico_City',
+            'Panamá': 'America/Panama',
+            'Méxican': 'America/Mexico_City',
+            'Los Angles': 'America/Los_Angeles',
+            'Los Angelas': 'America/Los_Angeles',
+            'Newyork': 'America/New_York',
+            'New Yourk': 'America/New_York',
+            'Sanfrancisco': 'America/Los_Angeles',
+            'San Fransisco': 'America/Los_Angeles',
+            'Washinton': 'America/New_York',
+            'Philidelphia': 'America/New_York',
+            'Pittsburg': 'America/New_York',
+            'Cincinatti': 'America/New_York',
+            'Detriot': 'America/Detroit',
+            'Phoneix': 'America/Phoenix',
+            'Phonix': 'America/Phoenix',
+            'Seatle': 'America/Los_Angeles',
+            'Seatel': 'America/Los_Angeles',
+            'Portand': 'America/Los_Angeles',
+            'Denever': 'America/Denver',
+            'Vancover': 'America/Vancouver',
+            'Vancuver': 'America/Vancouver',
+            'Toronoto': 'America/Toronto',
+            'Monteral': 'America/Montreal',
+            'Ottowa': 'America/Toronto',
+            'Calgarry': 'America/Edmonton',
+            
+            // Regions and areas
+            'West Coast': 'America/Los_Angeles',
+            'East Coast': 'America/New_York',
+            'Midwest': 'America/Chicago',
+            'Gulf Coast': 'America/Chicago',
+            'New England': 'America/New_York',
+            'Pacific Northwest': 'America/Los_Angeles',
+            'PNW': 'America/Los_Angeles',
+            'Bay Area': 'America/Los_Angeles',
+            'Tri State': 'America/New_York',
+            'SoCal': 'America/Los_Angeles',
+            'NorCal': 'America/Los_Angeles',
+            'Southern California': 'America/Los_Angeles',
+            'Northern California': 'America/Los_Angeles',
+            'South Florida': 'America/New_York',
+            'Central Europe': 'Europe/Berlin',
+            'Western Europe': 'Europe/Paris',
+            'Eastern Europe': 'Europe/Warsaw',
+            'Northern Europe': 'Europe/Stockholm',
+            'Scandinavia': 'Europe/Stockholm',
+            'Nordic': 'Europe/Stockholm',
+            'Baltics': 'Europe/Riga',
+            'Balkans': 'Europe/Belgrade',
+            'Mediterranean': 'Europe/Rome',
+            'Middle East': 'Asia/Dubai',
+            'Gulf': 'Asia/Dubai',
+            'GCC': 'Asia/Dubai',
+            'Levant': 'Asia/Beirut',
+            'South Asia': 'Asia/Kolkata',
+            'Southeast Asia': 'Asia/Singapore',
+            'SEA': 'Asia/Singapore',
+            'East Asia': 'Asia/Tokyo',
+            'North Asia': 'Asia/Tokyo',
+            'Central Asia': 'Asia/Almaty',
+            'APAC': 'Asia/Singapore',
+            'Asia Pacific': 'Asia/Singapore',
+            'ANZ': 'Australia/Sydney',
+            'Australasia': 'Australia/Sydney',
+            'Oceania': 'Australia/Sydney',
+            'Sub Saharan Africa': 'Africa/Lagos',
+            'East Africa': 'Africa/Nairobi',
+            'West Africa': 'Africa/Lagos',
+            'Southern Africa': 'Africa/Johannesburg',
+            'North Africa': 'Africa/Cairo',
+            'MENA': 'Asia/Dubai',
+            'LATAM': 'America/Sao_Paulo',
+            'Latin America': 'America/Sao_Paulo',
+            'South America': 'America/Sao_Paulo',
+            'Central America': 'America/Guatemala',
+            'Caribbean': 'America/Jamaica',
+            'EMEA': 'Europe/London',
+            'Americas': 'America/New_York',
+            
+            // GMT/UTC Offsets
+            'GMT+0': 'UTC',
+            'GMT-0': 'UTC',
+            'GMT+1': 'Europe/Paris',
+            'GMT+2': 'Europe/Athens',
+            'GMT+3': 'Europe/Moscow',
+            'GMT+4': 'Asia/Dubai',
+            'GMT+5': 'Asia/Karachi',
+            'GMT+5:30': 'Asia/Kolkata',
+            'GMT+5.5': 'Asia/Kolkata',
+            'GMT+6': 'Asia/Dhaka',
+            'GMT+7': 'Asia/Bangkok',
+            'GMT+8': 'Asia/Singapore',
+            'GMT+9': 'Asia/Tokyo',
+            'GMT+10': 'Australia/Sydney',
+            'GMT+11': 'Pacific/Noumea',
+            'GMT+12': 'Pacific/Auckland',
+            'GMT-1': 'Atlantic/Azores',
+            'GMT-2': 'Atlantic/South_Georgia',
+            'GMT-3': 'America/Sao_Paulo',
+            'GMT-4': 'America/New_York',
+            'GMT-5': 'America/New_York',
+            'GMT-6': 'America/Chicago',
+            'GMT-7': 'America/Denver',
+            'GMT-8': 'America/Los_Angeles',
+            'GMT-9': 'America/Anchorage',
+            'GMT-10': 'Pacific/Honolulu',
+            'GMT-11': 'Pacific/Midway',
+            'GMT-12': 'Etc/GMT+12',
+            'UTC+0': 'UTC',
+            'UTC-0': 'UTC',
+            'UTC+1': 'Europe/Paris',
+            'UTC+2': 'Europe/Athens',
+            'UTC+3': 'Europe/Moscow',
+            'UTC+4': 'Asia/Dubai',
+            'UTC+5': 'Asia/Karachi',
+            'UTC+5:30': 'Asia/Kolkata',
+            'UTC+5.5': 'Asia/Kolkata',
+            'UTC+6': 'Asia/Dhaka',
+            'UTC+7': 'Asia/Bangkok',
+            'UTC+8': 'Asia/Singapore',
+            'UTC+9': 'Asia/Tokyo',
+            'UTC+10': 'Australia/Sydney',
+            'UTC+11': 'Pacific/Noumea',
+            'UTC+12': 'Pacific/Auckland',
+            'UTC-1': 'Atlantic/Azores',
+            'UTC-2': 'Atlantic/South_Georgia',
+            'UTC-3': 'America/Sao_Paulo',
+            'UTC-4': 'America/New_York',
+            'UTC-5': 'America/New_York',
+            'UTC-6': 'America/Chicago',
+            'UTC-7': 'America/Denver',
+            'UTC-8': 'America/Los_Angeles',
+            'UTC-9': 'America/Anchorage',
+            'UTC-10': 'Pacific/Honolulu',
+            'UTC-11': 'Pacific/Midway',
+            'UTC-12': 'Etc/GMT+12',
+        };
+
+        // Detect browser timezone
+        const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        
+        // Get city name from timezone
+        function getCityFromTz(tz) {
+            // Check if there's an alias that matches
+            for (const [city, tzId] of Object.entries(cityAliases)) {
+                if (tzId === tz && !city.includes(' ') && city.length > 2 && city !== city.toUpperCase()) {
+                    return city;
+                }
+            }
+            // Fall back to extracting from IANA timezone
+            const parts = tz.split('/');
+            return parts[parts.length - 1].replace(/_/g, ' ');
+        }
+        
+        function getRegionFromTz(tz) {
+            const parts = tz.split('/');
+            return parts.length > 1 ? parts[0].replace(/_/g, ' ') : '';
+        }
+
+        // LocalStorage keys
+        const STORAGE_KEY = 'overlap_zones';
+        const PREFS_KEY = 'overlap_prefs';
+
+        // Load zones from localStorage or use defaults
+        function loadZones() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        return parsed;
+                    }
+                }
+            } catch (e) {
+                console.warn('Failed to load zones from localStorage:', e);
+            }
+            
+            // Default: local timezone + London
+            const defaults = [{city: localCity, region: localRegion, tz: browserTz}];
+            if (browserTz !== 'Europe/London') {
+                defaults.push({city: 'London', region: 'Europe', tz: 'Europe/London'});
+            }
+            return defaults;
+        }
+
+        // Save zones to localStorage
+        function saveZones() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(zones));
+            } catch (e) {
+                console.warn('Failed to save zones to localStorage:', e);
+            }
+        }
+
+        // Load preferences from localStorage
+        function loadPrefs() {
+            try {
+                const saved = localStorage.getItem(PREFS_KEY);
+                if (saved) {
+                    const prefs = JSON.parse(saved);
+                    if (typeof prefs.use24h === 'boolean') use24h = prefs.use24h;
+                    if (typeof prefs.dark === 'boolean') dark = prefs.dark;
+                }
+            } catch (e) {
+                console.warn('Failed to load prefs from localStorage:', e);
+            }
+        }
+
+        // Save preferences to localStorage
+        function savePrefs() {
+            try {
+                localStorage.setItem(PREFS_KEY, JSON.stringify({use24h, dark}));
+            } catch (e) {
+                console.warn('Failed to save prefs to localStorage:', e);
+            }
+        }
+
+        // Initialize zones from localStorage or defaults
+        const localCity = getCityFromTz(browserTz);
+        const localRegion = getRegionFromTz(browserTz);
+        let zones = loadZones();
+
+        let sel = {start:null, end:null};
+        let dragging = false;
+        let dark = true;
+        let dateOffset = 0;
+        let use24h = false;
+
+        // Load saved preferences
+        loadPrefs();
+
+        const INFO_WIDTH = 180;
+
+        let selectedResultIndex = -1;
+
+        function init() {
+            applyTheme();
+            
+            const toggle24h = document.getElementById('toggle24h');
+            const datePrevBtn = document.getElementById('datePrevBtn');
+            const dateNextBtn = document.getElementById('dateNextBtn');
+            const nowBtn = document.getElementById('nowBtn');
+            const findTimeBtn = document.getElementById('findTimeBtn');
+            const googleCalBtn = document.getElementById('googleCalBtn');
+            const teamsCalBtn = document.getElementById('teamsCalBtn');
+            const zoomCalBtn = document.getElementById('zoomCalBtn');
+            const icalBtn = document.getElementById('icalBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const addTzInput = document.getElementById('addTzInput');
+            
+            // Apply saved 24h toggle state
+            if (toggle24h) toggle24h.classList.toggle('active', use24h);
+            render();
+            tick();
+            setInterval(tick, 1000);
+
+            // Add event listeners for buttons
+            if (toggle24h) toggle24h.addEventListener('click', toggle24Hour);
+            if (datePrevBtn) datePrevBtn.addEventListener('click', function() { changeDate(-1); });
+            if (dateNextBtn) dateNextBtn.addEventListener('click', function() { changeDate(1); });
+            if (nowBtn) nowBtn.addEventListener('click', goToNow);
+            if (findTimeBtn) findTimeBtn.addEventListener('click', findBestTime);
+            if (googleCalBtn) googleCalBtn.addEventListener('click', function() { createMeeting('google'); });
+            if (teamsCalBtn) teamsCalBtn.addEventListener('click', function() { createMeeting('teams'); });
+            if (zoomCalBtn) zoomCalBtn.addEventListener('click', function() { createMeeting('zoom'); });
+            if (icalBtn) icalBtn.addEventListener('click', downloadIcal);
+            if (copyBtn) copyBtn.addEventListener('click', copyToClipboard);
+            
+            // Keyboard shortcut for copy (Cmd/Ctrl+C when selection exists)
+            document.addEventListener('keydown', function(e) {
+                if ((e.metaKey || e.ctrlKey) && e.key === 'c' && sel.start !== null) {
+                    e.preventDefault();
+                    copyToClipboard();
+                }
+            });
+            
+            // Input event listeners
+            addTzInput.addEventListener('input', searchTz);
+            addTzInput.addEventListener('focus', showTzList);
+            addTzInput.addEventListener('blur', hideTzListDelayed);
+            addTzInput.addEventListener('keydown', handleTzKeydown);
+
+            // Event delegation for dynamically created elements
+            document.getElementById('tzList').addEventListener('click', (e) => {
+                const moveBtn = e.target.closest('.tz-move');
+                const removeBtn = e.target.closest('.tz-remove');
+                
+                if (moveBtn) {
+                    e.stopPropagation();
+                    const row = moveBtn.closest('.tz-row');
+                    const idx = parseInt(row.dataset.idx);
+                    const direction = moveBtn.textContent === '↑' ? -1 : 1;
+                    moveZone(idx, direction);
+                } else if (removeBtn) {
+                    e.stopPropagation();
+                    const row = removeBtn.closest('.tz-row');
+                    const idx = parseInt(row.dataset.idx);
+                    removeZone(idx);
+                }
+            });
+
+            // Event delegation for timezone search results
+            document.getElementById('addTzResults').addEventListener('mousedown', (e) => {
+                const result = e.target.closest('.add-tz-result');
+                if (result && !result.classList.contains('added')) {
+                    const city = result.dataset.city;
+                    const region = result.dataset.region;
+                    const tz = result.dataset.tz;
+                    addZone(city, region, tz);
+                }
+            });
+
+            // Auto-focus the add timezone input only if user has 1 or fewer cities
+            // This lets keyboard shortcuts work immediately for returning users
+            setTimeout(() => {
+                if (zones.length <= 1) {
+                    document.getElementById('addTzInput').focus();
+                }
+                scrollToNow(); // Scroll to current time on load
+            }, 100);
+
+            document.addEventListener('mouseup', () => {
+                if (dragging) {
+                    dragging = false;
+                }
+            });
+
+            document.addEventListener('keydown', e => {
+                // Don't trigger shortcuts when typing in input
+                const isTyping = document.activeElement.tagName === 'INPUT';
+                
+                if (e.key === 'Escape') {
+                    clearSel();
+                    document.getElementById('addTzInput').blur();
+                    document.getElementById('addTzResults').classList.remove('open');
+                }
+                
+                if (isTyping) return;
+                
+                // Shortcuts (only when not typing)
+                if (e.key === 'a' || e.key === 'A') {
+                    // Add a place
+                    e.preventDefault();
+                    document.getElementById('addTzInput').focus();
+                } else if (e.key === 'f' || e.key === 'F') {
+                    // Find time
+                    e.preventDefault();
+                    findBestTime();
+                } else if (e.key === 'n' || e.key === 'N') {
+                    // Go to now
+                    e.preventDefault();
+                    goToNow();
+                } else if ((e.key === 'ArrowRight' || e.key === 'ArrowLeft') && sel.start !== null) {
+                    // Cycle through find time results
+                    e.preventDefault();
+                    if (lastOverlapSlots.length > 0) {
+                        if (e.key === 'ArrowRight') {
+                            overlapSearchIndex = (overlapSearchIndex + 1) % lastOverlapSlots.length;
+                        } else {
+                            overlapSearchIndex = (overlapSearchIndex - 1 + lastOverlapSlots.length) % lastOverlapSlots.length;
+                        }
+                        const targetSlotIndex = lastOverlapSlots[overlapSearchIndex];
+                        const firstTimeline = document.querySelector('.timeline');
+                        const slots = firstTimeline.querySelectorAll('.slot');
+                        const targetSlot = slots[targetSlotIndex];
+                        if (targetSlot) {
+                            const scrollLeft = Math.max(0, targetSlot.offsetLeft - 100);
+                            document.querySelectorAll('.timeline-scroll').forEach(ts => {
+                                ts.scrollLeft = scrollLeft;
+                            });
+                            sel = {start: targetSlotIndex, end: targetSlotIndex + 1};
+                            setTimeout(() => updateSelectionBox(), 50);
+                        }
+                    }
+                } else if (sel.start !== null) {
+                    // Create invite shortcuts (when time is selected)
+                    if (e.key === 'g' || e.key === 'G') {
+                        e.preventDefault();
+                        createMeeting('google');
+                    } else if (e.key === 't' || e.key === 'T') {
+                        e.preventDefault();
+                        createMeeting('teams');
+                    } else if (e.key === 'z' || e.key === 'Z') {
+                        e.preventDefault();
+                        createMeeting('zoom');
+                    } else if (e.key === 'i' || e.key === 'I') {
+                        e.preventDefault();
+                        downloadIcal();
+                    }
+                }
+            });
+
+            document.addEventListener('click', e => {
+                if (!e.target.closest('.add-tz-wrap')) {
+                    document.getElementById('addTzResults').classList.remove('open');
+                    selectedResultIndex = -1;
+                }
+                if (!e.target.closest('.tz-list') && !e.target.closest('.create-invite-container') && !e.target.closest('.selection-box') && !e.target.closest('.find-time-btn') && !e.target.closest('.date-picker-inline')) {
+                    clearSel();
+                }
+            });
+        }
+
+        function applyTheme() {
+            document.body.classList.toggle('dark', dark);
+        }
+
+        function toggleTheme() {
+            dark = !dark;
+            applyTheme();
+            savePrefs();
+        }
+
+        function getBaseDate() {
+            // Get midnight in local browser time for today (no offset needed)
+            // This gives us 7 days starting from today
+            const d = new Date();
+            d.setDate(d.getDate() + dateOffset);
+            d.setHours(0, 0, 0, 0);
+            return d;
+        }
+
+        function changeDate(delta) {
+            dateOffset += delta;
+            updateDateDisplay();
+            render();
+        }
+
+        function updateDateDisplay() {
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            
+            // Calculate the "selected" day based on dateOffset
+            const selectedDay = new Date(today);
+            selectedDay.setDate(selectedDay.getDate() + dateOffset);
+            
+            let label;
+            if (dateOffset === 0) label = 'Today';
+            else if (dateOffset === 1) label = 'Tomorrow';
+            else if (dateOffset === -1) label = 'Yesterday';
+            else label = selectedDay.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
+            
+            document.getElementById('dateDisplay').textContent = label;
+        }
+
+        function goToNow() {
+            dateOffset = 0;
+            clearSel(); // Clear any selection
+            render();
+            // Scroll to current time after a brief delay to ensure render is complete
+            setTimeout(() => {
+                scrollToNow();
+                // Show current time in date picker
+                const now = new Date();
+                const timeFmt = {hour: 'numeric', minute: '2-digit', hour12: !use24h};
+                const dateFmt = {weekday: 'short', month: 'short', day: 'numeric'};
+                const dateStr = now.toLocaleDateString('en-US', dateFmt);
+                const timeStr = now.toLocaleTimeString('en-US', timeFmt);
+                document.getElementById('dateDisplay').textContent = `${dateStr}, ${timeStr}`;
+            }, 50);
+        }
+
+        // Track current overlap search position
+        let overlapSearchIndex = 0;
+        let lastOverlapSlots = [];
+
+        function findBestTime() {
+            const base = getBaseDate();
+            const now = new Date();
+            
+            // Find all hourly slots where all timezones have overlapping hours
+            // Priority: 1) All in working hours (9-18), 2) All in waking hours (7-22), 3) Best compromise
+            
+            const workingOverlaps = [];
+            const wakingOverlaps = [];
+            const slotScores = []; // For fallback: track how "good" each slot is
+            
+            // Check each hour slot (every 2 slots = 1 hour) across 14 days
+            for (let slotIndex = 0; slotIndex < 672; slotIndex += 2) {
+                const slotTime = new Date(base.getTime() + slotIndex * 1800000);
+                
+                // Skip if in the past
+                if (slotTime < now) continue;
+                
+                let allWorking = true;
+                let allWaking = true;
+                let workingCount = 0;
+                let wakingCount = 0;
+                let totalScore = 0;
+                
+                for (const zone of zones) {
+                    // Get hour in target timezone using Intl formatter
+                    const hour = parseInt(slotTime.toLocaleString('en-US', {
+                        timeZone: zone.tz,
+                        hour: 'numeric',
+                        hour12: false
+                    }));
+                    
+                    // Working hours: 9-18
+                    if (hour >= 9 && hour < 18) {
+                        workingCount++;
+                        totalScore += 10; // Best score
+                    } else {
+                        allWorking = false;
+                    }
+                    
+                    // Waking hours: 7-22
+                    if (hour >= 7 && hour < 22) {
+                        wakingCount++;
+                        if (hour < 9 || hour >= 18) {
+                            totalScore += 5; // Decent score for waking but not working
+                        }
+                    } else {
+                        allWaking = false;
+                        // Early morning (5-7) or late night (22-24) - not ideal but tolerable
+                        if (hour >= 5 && hour < 7) totalScore += 2;
+                        else if (hour >= 22 && hour < 24) totalScore += 2;
+                        // Middle of night (0-5) - worst
+                        else totalScore += 0;
+                    }
+                }
+                
+                if (allWorking) {
+                    workingOverlaps.push(slotIndex);
+                } else if (allWaking) {
+                    wakingOverlaps.push(slotIndex);
+                }
+                
+                // Store score for fallback
+                slotScores.push({ slotIndex, totalScore, workingCount, wakingCount });
+            }
+            
+            // Determine which overlaps to use
+            let overlaps;
+            if (workingOverlaps.length > 0) {
+                overlaps = workingOverlaps;
+            } else if (wakingOverlaps.length > 0) {
+                overlaps = wakingOverlaps;
+            } else {
+                // Fallback: find the best compromise times
+                // Sort by total score (descending), then by working count, then by waking count
+                slotScores.sort((a, b) => {
+                    if (b.totalScore !== a.totalScore) return b.totalScore - a.totalScore;
+                    if (b.workingCount !== a.workingCount) return b.workingCount - a.workingCount;
+                    return b.wakingCount - a.wakingCount;
+                });
+                
+                // Take top slots (best compromise times)
+                const bestScore = slotScores[0]?.totalScore || 0;
+                overlaps = slotScores
+                    .filter(s => s.totalScore >= bestScore * 0.8) // Within 80% of best
+                    .slice(0, 50) // Limit to 50 options
+                    .map(s => s.slotIndex);
+            }
+            
+            if (overlaps.length === 0) {
+                // No overlap found - show button as inactive briefly
+                const btn = document.getElementById('findTimeBtn');
+                btn.classList.add('no-overlap');
+                setTimeout(() => btn.classList.remove('no-overlap'), 1500);
+                return;
+            }
+            
+            // If clicking again with same overlaps, cycle through
+            if (JSON.stringify(overlaps) === JSON.stringify(lastOverlapSlots)) {
+                overlapSearchIndex = (overlapSearchIndex + 1) % overlaps.length;
+            } else {
+                overlapSearchIndex = 0;
+                lastOverlapSlots = overlaps;
+            }
+            
+            const targetSlotIndex = overlaps[overlapSearchIndex];
+            
+            // Scroll to the slot
+            const firstTimeline = document.querySelector('.timeline');
+            if (!firstTimeline) return;
+            
+            const slots = firstTimeline.querySelectorAll('.slot');
+            const targetSlot = slots[targetSlotIndex];
+            
+            if (targetSlot) {
+                const scrollLeft = Math.max(0, targetSlot.offsetLeft - 100);
+                
+                // Sync all timeline scrolls
+                document.querySelectorAll('.timeline-scroll').forEach(ts => {
+                    ts.scrollLeft = scrollLeft;
+                });
+                
+                // Auto-select this time slot (triggers yellow highlight + create invite button)
+                sel = {start: targetSlotIndex, end: targetSlotIndex + 1};
+                
+                // Small delay to let scroll complete, then update highlight
+                setTimeout(() => {
+                    updateSelectionBox();
+                }, 50);
+            }
+        }
+
+        function scrollToNow() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            
+            // Calculate position based on current time (today starts at slot 0)
+            const totalMinutes = hours * 60 + minutes;
+            const slotIndex = Math.floor(totalMinutes / 30);
+            
+            const firstTimeline = document.querySelector('.timeline');
+            if (!firstTimeline) return;
+            
+            const slots = firstTimeline.querySelectorAll('.slot');
+            const targetSlot = slots[slotIndex];
+            
+            if (targetSlot) {
+                const scrollContainer = document.querySelector('.timeline-scroll');
+                if (scrollContainer) {
+                    // Scroll so NOW is in the middle of the visible timeline area
+                    const visibleWidth = scrollContainer.offsetWidth;
+                    scrollContainer.scrollLeft = Math.max(0, targetSlot.offsetLeft - (visibleWidth / 2));
+                }
+            }
+        }
+
+        function toggle24Hour() {
+            use24h = !use24h;
+            document.getElementById('toggle24h').classList.toggle('active', use24h);
+            savePrefs();
+            
+            // Preserve scroll position
+            const scrollContainer = document.querySelector('.timeline-scroll');
+            const scrollLeft = scrollContainer?.scrollLeft || 0;
+            
+            render();
+            tick();
+            
+            // Restore scroll position
+            document.querySelectorAll('.timeline-scroll').forEach(ts => {
+                ts.scrollLeft = scrollLeft;
+            });
+        }
+
+        function tick() {
+            const now = new Date();
+            document.getElementById('nowTime').textContent = now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit', hour12:!use24h});
+            document.getElementById('nowDate').textContent = now.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric'});
+
+            document.querySelectorAll('.tz-current').forEach(el => {
+                el.textContent = now.toLocaleTimeString('en-US', {timeZone:el.dataset.tz, hour:'2-digit', minute:'2-digit', hour12:!use24h});
+            });
+
+            updateNowLine();
+        }
+
+        function getOffset(tz) {
+            try {
+                const f = new Intl.DateTimeFormat('en-US', {timeZone:tz, timeZoneName:'shortOffset'});
+                const p = f.formatToParts(new Date()).find(x => x.type === 'timeZoneName');
+                return p ? p.value : '';
+            } catch {
+                return '';
+            }
+        }
+
+        function render() {
+            const list = document.getElementById('tzList');
+
+            list.innerHTML = zones.map((z, i) => `
+                <div class="tz-row" data-idx="${i}">
+                    ${zones.length > 1 ? `
+                    <div class="tz-reorder">
+                        <button class="tz-move" ${i === 0 ? 'disabled' : ''}>↑</button>
+                        <button class="tz-move" ${i === zones.length - 1 ? 'disabled' : ''}>↓</button>
+                    </div>
+                    ` : ''}
+                    <div class="tz-info">
+                        ${zones.length > 1 ? `<button class="tz-remove">×</button>` : ''}
+                        <div class="tz-city">
+                            ${z.city}
+                            ${z.tz === browserTz ? '<span class="tz-badge">Local</span>' : ''}
+                        </div>
+                        <div class="tz-meta">${z.region} · ${getOffset(z.tz)}</div>
+                        <div class="tz-current" data-tz="${z.tz}">--:--</div>
+                    </div>
+                    <div class="timeline-scroll">
+                        <div class="timeline" data-tz="${z.tz}">
+                            ${renderSlots(z.tz)}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.timeline').forEach(tl => {
+                tl.addEventListener('mousedown', dragStart);
+                tl.addEventListener('mousemove', dragMove);
+                tl.addEventListener('mousemove', handleHover);
+                tl.addEventListener('mouseleave', hideHover);
+            });
+
+            // Add scroll listeners for timeline sync
+            document.querySelectorAll('.timeline-scroll').forEach(ts => {
+                ts.addEventListener('scroll', () => syncScroll(ts));
+            });
+
+            updateDateDisplay();
+            tick();
+            updateSelectionBox();
+        }
+
+        function handleHover(e) {
+            // Don't show hover while dragging
+            if (dragging) {
+                hideHover();
+                return;
+            }
+            
+            const slot = e.target.closest('.slot');
+            if (!slot) {
+                hideHover();
+                return;
+            }
+            
+            const slotIndex = parseInt(slot.dataset.i);
+            // Snap to hour (even slot index)
+            const hourStart = Math.floor(slotIndex / 2) * 2;
+            
+            updateHoverHighlight(hourStart);
+        }
+
+        function hideHover() {
+            document.getElementById('hoverHighlight').classList.remove('visible');
+        }
+
+        function updateHoverHighlight(hourStartIndex) {
+            const highlight = document.getElementById('hoverHighlight');
+            const firstTimeline = document.querySelector('.timeline');
+            if (!firstTimeline) return;
+            
+            const slots = firstTimeline.querySelectorAll('.slot');
+            const startSlot = slots[hourStartIndex];
+            const endSlot = slots[hourStartIndex + 1]; // 2 slots = 1 hour
+            
+            if (!startSlot || !endSlot) {
+                highlight.classList.remove('visible');
+                return;
+            }
+            
+            const tzList = document.getElementById('tzList');
+            const container = document.querySelector('.tz-list-container');
+            const containerRect = container.getBoundingClientRect();
+            
+            const startRect = startSlot.getBoundingClientRect();
+            const endRect = endSlot.getBoundingClientRect();
+            
+            // Get the left edge of where timelines start
+            const firstTimelineScroll = document.querySelector('.timeline-scroll');
+            const timelineLeftEdge = firstTimelineScroll ? 
+                (firstTimelineScroll.getBoundingClientRect().left - containerRect.left) : INFO_WIDTH;
+            
+            let startX = startRect.left - containerRect.left;
+            const endX = endRect.right - containerRect.left;
+            
+            // Clip at timeline edge
+            const clippedStartX = Math.max(startX, timelineLeftEdge);
+            const clippedWidth = endX - clippedStartX;
+            
+            if (clippedWidth <= 0) {
+                highlight.classList.remove('visible');
+                return;
+            }
+            
+            highlight.style.left = clippedStartX + 'px';
+            highlight.style.width = clippedWidth + 'px';
+            highlight.style.top = '0px';
+            highlight.style.height = tzList.offsetHeight + 'px';
+            highlight.classList.add('visible');
+        }
+
+        function renderSlots(tz) {
+            const base = getBaseDate();
+
+            let html = '';
+            // 672 slots = 14 days (336 hours)
+            for (let i = 0; i < 672; i++) {
+                const t = new Date(base.getTime() + i * 1800000);
+                
+                // Get the time in the target timezone
+                const options = {timeZone: tz, hour: 'numeric', minute: 'numeric', hour12: false};
+                const timeStr = t.toLocaleTimeString('en-US', options);
+                const [hourStr, minStr] = timeStr.split(':');
+                const h = parseInt(hourStr);
+                const m = parseInt(minStr);
+                
+                // Get day of week in target timezone (0 = Sunday, 6 = Saturday)
+                const dayOfWeek = parseInt(t.toLocaleDateString('en-US', {timeZone: tz, weekday: 'narrow', day: 'numeric'}).charAt(0)) || 
+                                  new Date(t.toLocaleString('en-US', {timeZone: tz})).getDay();
+                const isWeekend = t.toLocaleDateString('en-US', {timeZone: tz, weekday: 'short'}).match(/^(Sat|Sun)/);
+                
+                const work = h >= 9 && h < 18;
+                const isHourStart = m === 0;
+                const isDayStart = h === 0 && m === 0;
+                
+                // Get day label in the target timezone
+                const dayLabel = isDayStart ? t.toLocaleDateString('en-US', {timeZone: tz, weekday: 'short', day: 'numeric'}) : '';
+
+                const hourLabel = use24h ? h : (h % 12 || 12);
+                const ampm = use24h ? '' : `<span class="hour-ampm">${h < 12 ? 'am' : 'pm'}</span>`;
+
+                html += `<div class="slot ${work ? 'work' : ''} ${isWeekend ? 'weekend' : ''} ${isDayStart ? 'day-start' : ''}" data-i="${i}" data-ts="${t.getTime()}">
+                    ${isDayStart ? `<span class="slot-day">${dayLabel}</span>` : ''}
+                    ${isHourStart ? `<div class="slot-label"><span class="hour-num">${hourLabel}</span>${ampm}</div>` : ''}
+                </div>`;
+            }
+            return html;
+        }
+
+        function syncScroll(el) {
+            const scrollLeft = el.scrollLeft;
+            document.querySelectorAll('.timeline-scroll').forEach(ts => {
+                if (ts !== el) ts.scrollLeft = scrollLeft;
+            });
+            updateNowLine();
+            updateSelectionBox();
+            updateDateFromScroll(el);
+        }
+
+        function updateDateFromScroll(scrollContainer) {
+            // Find the slot that's roughly in the center of the visible area
+            const timeline = scrollContainer.querySelector('.timeline');
+            if (!timeline) return;
+            
+            const slots = timeline.querySelectorAll('.slot');
+            const containerRect = scrollContainer.getBoundingClientRect();
+            const centerX = containerRect.left + containerRect.width / 2;
+            
+            // Find the slot at the center
+            let centerSlot = null;
+            for (const slot of slots) {
+                const rect = slot.getBoundingClientRect();
+                if (rect.left <= centerX && rect.right >= centerX) {
+                    centerSlot = slot;
+                    break;
+                }
+            }
+            
+            if (!centerSlot) return;
+            
+            const timestamp = parseInt(centerSlot.dataset.ts);
+            if (!timestamp) return;
+            
+            const slotDate = new Date(timestamp);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const slotDay = new Date(slotDate);
+            slotDay.setHours(0, 0, 0, 0);
+            
+            // Calculate day difference
+            const diffDays = Math.round((slotDay - today) / (1000 * 60 * 60 * 24));
+            
+            // Update display without changing dateOffset (don't re-render)
+            let label;
+            if (diffDays === 0) label = 'Today';
+            else if (diffDays === 1) label = 'Tomorrow';
+            else if (diffDays === -1) label = 'Yesterday';
+            else label = slotDay.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
+            
+            document.getElementById('dateDisplay').textContent = label;
+        }
+
+        function updateNowLine() {
+            const nowLine = document.getElementById('nowLine');
+            
+            // Only show if viewing today (dateOffset 0)
+            if (dateOffset !== 0) {
+                nowLine.style.display = 'none';
+                return;
+            }
+
+            // Use the local timezone row for accurate positioning
+            let targetTimeline = document.querySelector(`.timeline[data-tz="${browserTz}"]`);
+            if (!targetTimeline) {
+                targetTimeline = document.querySelector('.timeline');
+            }
+            
+            const tzList = document.getElementById('tzList');
+            const container = document.querySelector('.tz-list-container');
+            if (!targetTimeline || !tzList || !container) return;
+
+            const slots = targetTimeline.querySelectorAll('.slot');
+            if (slots.length === 0) return;
+
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+            
+            // Calculate total minutes since midnight
+            const totalMinutes = currentHour * 60 + currentMinute;
+            
+            // Each slot is 30 minutes (today starts at slot 0)
+            const exactSlotPosition = totalMinutes / 30;
+            
+            if (exactSlotPosition < 0 || exactSlotPosition >= slots.length) {
+                nowLine.style.display = 'none';
+                return;
+            }
+            
+            const slotIndex = Math.floor(exactSlotPosition);
+            const targetSlot = slots[slotIndex];
+            
+            if (!targetSlot) {
+                nowLine.style.display = 'none';
+                return;
+            }
+            
+            // Position within slot (fractional part)
+            const pct = exactSlotPosition - slotIndex;
+            
+            // Subtract 64px to correct the offset
+            const positionInTimeline = targetSlot.offsetLeft + (targetSlot.offsetWidth * pct) - 64;
+            
+            // Account for scroll position - use the parent scroll container of our target timeline
+            const scrollContainer = targetTimeline.closest('.timeline-scroll');
+            const scrollLeft = scrollContainer?.scrollLeft || 0;
+            const finalLeft = INFO_WIDTH + positionInTimeline - scrollLeft;
+            
+            // Get viewport bounds (right edge of visible timeline area)
+            const containerWidth = container.offsetWidth;
+            
+            // Hide if completely off screen
+            const leftClipPoint = INFO_WIDTH - 60;
+            if (finalLeft < leftClipPoint - 20 || finalLeft > containerWidth + 20) {
+                nowLine.style.display = 'none';
+                return;
+            }
+            
+            // Show the line
+            nowLine.style.display = 'block';
+            nowLine.style.left = finalLeft + 'px';
+            nowLine.style.top = '0';
+            nowLine.style.height = tzList.offsetHeight + 'px';
+            
+            // Calculate clipping for both edges
+            let clipLeft = 0;
+            let clipRight = 0;
+            
+            // Left edge: clip when going behind city names
+            if (finalLeft < leftClipPoint) {
+                clipLeft = leftClipPoint - finalLeft;
+            }
+            
+            // Right edge: clip when going past container
+            if (finalLeft > containerWidth - 5) {
+                clipRight = finalLeft - containerWidth + 5;
+            }
+            
+            if (clipLeft > 0 || clipRight > 0) {
+                nowLine.style.clipPath = `inset(-20px ${clipRight}px 0 ${clipLeft}px)`;
+            } else {
+                nowLine.style.clipPath = 'none';
+            }
+        }
+
+        function updateSelectionBox() {
+            const box = document.getElementById('selectionBox');
+            const createContainer = document.getElementById('createInviteContainer');
+            const dateDisplay = document.getElementById('dateDisplay');
+            
+            if (sel.start === null || sel.end === null) {
+                box.classList.remove('visible');
+                createContainer.classList.remove('visible');
+                updateDateDisplay(); // Reset to show date
+                return;
+            }
+
+            const min = Math.min(sel.start, sel.end);
+            const max = Math.max(sel.start, sel.end);
+            
+            const firstTimeline = document.querySelector('.timeline');
+            if (!firstTimeline) return;
+
+            const tzList = document.getElementById('tzList');
+            const container = document.querySelector('.tz-list-container');
+            const containerRect = container.getBoundingClientRect();
+            
+            const slots = firstTimeline.querySelectorAll('.slot');
+            const startSlot = slots[min];
+            const endSlot = slots[max];
+            
+            if (!startSlot || !endSlot) return;
+
+            const startRect = startSlot.getBoundingClientRect();
+            const endRect = endSlot.getBoundingClientRect();
+            
+            // Get the left edge of where timelines actually start
+            const firstTimelineScroll = document.querySelector('.timeline-scroll');
+            const timelineLeftEdge = firstTimelineScroll ? 
+                (firstTimelineScroll.getBoundingClientRect().left - containerRect.left) : INFO_WIDTH;
+
+            let startX = startRect.left - containerRect.left;
+            const endX = endRect.right - containerRect.left;
+            const containerWidth = container.offsetWidth;
+            
+            // Use the actual timeline edge as the clip point
+            const leftClipPoint = timelineLeftEdge;
+            
+            // Hide if completely off screen
+            if (endX < leftClipPoint || startX > containerWidth + 20) {
+                box.classList.remove('visible');
+                box.style.clipPath = 'none';
+            } else {
+                box.style.left = startX + 'px';
+                box.style.width = (endX - startX) + 'px';
+                box.style.top = '0px';
+                box.style.height = tzList.offsetHeight + 'px';
+                box.classList.add('visible');
+                
+                // Calculate clipping for both edges
+                let clipLeft = 0;
+                let clipRight = 0;
+                
+                // Left edge clip
+                if (startX < leftClipPoint) {
+                    clipLeft = leftClipPoint - startX;
+                }
+                
+                // Right edge clip - clip slightly before edge to account for rounded corners
+                if (endX > containerWidth - 1) {
+                    clipRight = endX - containerWidth + 1;
+                }
+                
+                if (clipLeft > 0 || clipRight > 0) {
+                    box.style.clipPath = `inset(0 ${clipRight}px 0 ${clipLeft}px)`;
+                } else {
+                    box.style.clipPath = 'none';
+                }
+            }
+            
+            // Calculate and display time period in dateDisplay
+            const base = getBaseDate();
+            const startTime = new Date(base.getTime() + min * 1800000);
+            const endTime = new Date(base.getTime() + (max + 1) * 1800000);
+            
+            const timeFmt = {hour: 'numeric', minute: '2-digit', hour12: !use24h};
+            const dateFmt = {weekday: 'short', month: 'short', day: 'numeric'};
+            
+            // Show date + time range
+            const dateStr = startTime.toLocaleDateString('en-US', dateFmt);
+            const timeStr = `${startTime.toLocaleTimeString('en-US', timeFmt)} – ${endTime.toLocaleTimeString('en-US', timeFmt)}`;
+            
+            dateDisplay.textContent = `${dateStr}, ${timeStr}`;
+            
+            createContainer.classList.add('visible');
+        }
+
+        function dragStart(e) {
+            const slot = e.target.closest('.slot');
+            if (slot) {
+                e.preventDefault();
+                dragging = true;
+                hideHover();
+                const i = parseInt(slot.dataset.i);
+                sel = {start: i, end: i};
+                updateSelectionBox();
+            }
+        }
+
+        function dragMove(e) {
+            if (!dragging) return;
+            const slot = e.target.closest('.slot');
+            if (slot) {
+                sel.end = parseInt(slot.dataset.i);
+                updateSelectionBox();
+            }
+        }
+
+        function clearSel() {
+            sel = {start: null, end: null};
+            updateSelectionBox();
+            document.getElementById('createInviteContainer').classList.remove('visible');
+        }
+
+        function createMeeting(platform) {
+            if (sel.start === null) return;
+
+            const base = getBaseDate();
+            const min = Math.min(sel.start, sel.end);
+            const max = Math.max(sel.start, sel.end);
+            const startTime = new Date(base.getTime() + min * 1800000);
+            const endTime = new Date(base.getTime() + (max + 1) * 1800000);
+
+            const fmtISO = d => d.toISOString().replace(/-|:|\.\d+/g, '');
+            const description = encodeURIComponent('Scheduled with Overlap');
+            const title = encodeURIComponent('Meeting');
+            
+            let url;
+            
+            if (platform === 'google') {
+                // Google Calendar
+                url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${description}&dates=${fmtISO(startTime)}/${fmtISO(endTime)}&ctz=${encodeURIComponent(browserTz)}`;
+            } else if (platform === 'outlook') {
+                // Microsoft Outlook
+                const fmtOutlook = d => d.toISOString();
+                url = `https://outlook.live.com/calendar/0/deeplink/compose?subject=${title}&body=${description}&startdt=${fmtOutlook(startTime)}&enddt=${fmtOutlook(endTime)}`;
+            } else if (platform === 'teams') {
+                // Microsoft Teams
+                url = `https://teams.microsoft.com/l/meeting/new?subject=${title}&content=${description}&startTime=${startTime.toISOString()}&endTime=${endTime.toISOString()}`;
+            } else if (platform === 'zoom') {
+                // Zoom - opens schedule page (requires login)
+                const fmtZoom = d => d.toISOString().slice(0, 16);
+                url = `https://zoom.us/schedule?topic=${title}&start_time=${fmtZoom(startTime)}&duration=${Math.round((endTime - startTime) / 60000)}`;
+            }
+            
+            if (url) {
+                window.open(url, '_blank');
+            }
+        }
+
+        function downloadIcal() {
+            if (sel.start === null) return;
+
+            const base = getBaseDate();
+            const min = Math.min(sel.start, sel.end);
+            const max = Math.max(sel.start, sel.end);
+            const startTime = new Date(base.getTime() + min * 1800000);
+            const endTime = new Date(base.getTime() + (max + 1) * 1800000);
+
+            const fmtICS = d => d.toISOString().replace(/-|:|\.\d+/g, '');
+            const uid = 'overlap-' + Date.now() + '@overlap.app';
+            
+            const icsContent = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//Overlap//Overlap Calendar//EN',
+                'CALSCALE:GREGORIAN',
+                'METHOD:PUBLISH',
+                'BEGIN:VEVENT',
+                `UID:${uid}`,
+                `DTSTAMP:${fmtICS(new Date())}`,
+                `DTSTART:${fmtICS(startTime)}`,
+                `DTEND:${fmtICS(endTime)}`,
+                'SUMMARY:Meeting',
+                'DESCRIPTION:Scheduled with Overlap',
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ].join('\r\n');
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'meeting.ics';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        }
+
+        function getClipboardText() {
+            if (sel.start === null) return null;
+
+            const base = getBaseDate();
+            const min = Math.min(sel.start, sel.end);
+            const max = Math.max(sel.start, sel.end);
+            const startTime = new Date(base.getTime() + min * 1800000);
+            const endTime = new Date(base.getTime() + (max + 1) * 1800000);
+
+            // Format times for each timezone
+            const lines = zones.map(zone => {
+                const startStr = startTime.toLocaleString('en-US', {
+                    timeZone: zone.tz,
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: !use24h
+                });
+                const endStr = endTime.toLocaleString('en-US', {
+                    timeZone: zone.tz,
+                    hour: 'numeric',
+                    minute: '2-digit',
+                    hour12: !use24h
+                });
+                return `${zone.city}: ${startStr} - ${endStr}`;
+            });
+
+            return lines.join('\n');
+        }
+
+        function copyToClipboard() {
+            const text = getClipboardText();
+            if (!text) return;
+
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copyBtn');
+                btn.classList.add('copied');
+                btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Copied`;
+                
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="currentColor" stroke-width="2"/></svg>Copy`;
+                }, 2000);
+            });
+        }
+
+        function showTzList() {
+            const q = document.getElementById('addTzInput').value.toLowerCase().trim();
+            if (q) {
+                searchTz();
+            }
+        }
+
+        function hideTzListDelayed() {
+            setTimeout(() => {
+                const results = document.getElementById('addTzResults');
+                if (!results.matches(':hover')) {
+                    results.classList.remove('open');
+                    selectedResultIndex = -1;
+                }
+            }, 150);
+        }
+
+        function searchTz() {
+            const q = document.getElementById('addTzInput').value.toLowerCase().trim();
+            const results = document.getElementById('addTzResults');
+            
+            if (!q) {
+                results.classList.remove('open');
+                selectedResultIndex = -1;
+                return;
+            }
+
+            // First check aliases
+            const aliasMatches = Object.entries(cityAliases)
+                .filter(([name]) => name.toLowerCase().includes(q))
+                .map(([name, tz]) => {
+                    const parts = tz.split('/');
+                    return {
+                        city: name,
+                        region: parts[0].replace(/_/g, ' '),
+                        tz: tz
+                    };
+                });
+
+            // Then check all IANA timezones
+            const tzMatches = allTimezones.filter(t => 
+                t.city.toLowerCase().includes(q) || 
+                t.region.toLowerCase().includes(q) ||
+                t.tz.toLowerCase().includes(q)
+            );
+
+            // Combine and dedupe by timezone
+            const seen = new Set();
+            const matches = [...aliasMatches, ...tzMatches]
+                .filter(t => {
+                    if (seen.has(t.tz)) return false;
+                    seen.add(t.tz);
+                    return true;
+                })
+                .slice(0, 8)
+                .map(t => ({
+                    ...t,
+                    added: zones.some(z => z.tz === t.tz)
+                }));
+
+            if (matches.length === 0) {
+                results.innerHTML = '<div class="add-tz-noresult">No timezones found</div>';
+                results.classList.add('open');
+                return;
+            }
+
+            results.innerHTML = matches.map((t, idx) => `
+                <div class="add-tz-result ${t.added ? 'added' : ''} ${idx === 0 && !t.added ? 'highlighted' : ''}" data-idx="${idx}" data-city="${t.city.replace(/"/g, '&quot;')}" data-region="${t.region.replace(/"/g, '&quot;')}" data-tz="${t.tz}">
+                    <div>
+                        <div class="add-tz-result-city">${t.city}${t.added ? ' <span class="added-label">Added</span>' : ''}</div>
+                        <div class="add-tz-result-region">${t.region}</div>
+                    </div>
+                    <span class="add-tz-result-offset">${getOffset(t.tz)}</span>
+                </div>
+            `).join('');
+            results.classList.add('open');
+            
+            // Auto-select first non-added result
+            selectedResultIndex = matches.findIndex(t => !t.added);
+        }
+
+        function handleTzKeydown(e) {
+            const results = document.getElementById('addTzResults');
+            const items = results.querySelectorAll('.add-tz-result:not(.added)');
+            
+            if (!results.classList.contains('open') || items.length === 0) return;
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedResultIndex = Math.min(selectedResultIndex + 1, items.length - 1);
+                updateHighlight(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedResultIndex = Math.max(selectedResultIndex - 1, 0);
+                updateHighlight(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                const highlighted = results.querySelector('.add-tz-result.highlighted:not(.added)');
+                if (highlighted) {
+                    const city = highlighted.dataset.city;
+                    const region = highlighted.dataset.region;
+                    const tz = highlighted.dataset.tz;
+                    addZone(city, region, tz);
+                }
+            }
+        }
+
+        function updateHighlight(items) {
+            document.querySelectorAll('.add-tz-result').forEach(el => el.classList.remove('highlighted'));
+            if (items[selectedResultIndex]) {
+                items[selectedResultIndex].classList.add('highlighted');
+            }
+        }
+
+        function addZone(city, region, tz) {
+            zones.push({city, region, tz});
+            document.getElementById('addTzInput').value = '';
+            document.getElementById('addTzResults').classList.remove('open');
+            saveZones();
+            render();
+        }
+
+        function removeZone(i) {
+            if (zones.length <= 1) return;
+            zones.splice(i, 1);
+            saveZones();
+            render();
+        }
+
+        function moveZone(i, direction) {
+            const newIndex = i + direction;
+            if (newIndex < 0 || newIndex >= zones.length) return;
+            
+            // Swap zones
+            [zones[i], zones[newIndex]] = [zones[newIndex], zones[i]];
+            saveZones();
+            render();
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+
+        // PWA Install handling
+        let deferredPrompt;
+        const pwaBanner = document.getElementById('pwaBanner');
+        const pwaInstallBtn = document.getElementById('pwaInstallBtn');
+        const extensionBanner = document.getElementById('extensionBanner');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show PWA banner on mobile, hide extension banner
+            if (window.innerWidth <= 768) {
+                pwaBanner.style.display = 'flex';
+                if (extensionBanner) extensionBanner.style.display = 'none';
+            }
+        });
+
+        if (pwaInstallBtn) {
+            pwaInstallBtn.addEventListener('click', async () => {
+                if (!deferredPrompt) return;
+                
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                
+                if (outcome === 'accepted') {
+                    pwaBanner.style.display = 'none';
+                }
+                deferredPrompt = null;
+            });
+        }
+
+        // Share button
+        const shareBtn = document.getElementById('shareBtn');
+        if (shareBtn) {
+            shareBtn.addEventListener('click', async () => {
+                const shareData = {
+                    title: 'Overlap',
+                    text: 'The fastest way to schedule across time zones',
+                    url: window.location.href
+                };
+                
+                if (navigator.share) {
+                    try {
+                        await navigator.share(shareData);
+                    } catch (err) {
+                        // User cancelled or error
+                    }
+                } else {
+                    // Fallback: copy to clipboard
+                    navigator.clipboard.writeText(window.location.href).then(() => {
+                        shareBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Copied!`;
+                        setTimeout(() => {
+                            shareBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M18 8a3 3 0 100-6 3 3 0 000 6zM6 15a3 3 0 100-6 3 3 0 000 6zM18 22a3 3 0 100-6 3 3 0 000 6zM8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Share`;
+                        }, 2000);
+                    });
+                }
+            });
+        }
+
+        window.addEventListener('appinstalled', () => {
+            pwaBanner.style.display = 'none';
+            deferredPrompt = null;
+        });
+
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
+        }
+    </script>
+</body>
+</html>
