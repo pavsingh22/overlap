@@ -10,14 +10,14 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Overlap">
     <meta property="og:description" content="The fastest way to schedule across time zones. Find overlapping working hours instantly.">
-    <meta property="og:image" content="https://useoverlap.com/og-image.png">
-    <meta property="og:url" content="https://useoverlap.com">
+    <meta property="og:image" content="https://useoverlap.io/og-image.png">
+    <meta property="og:url" content="https://useoverlap.io">
     
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Overlap">
     <meta name="twitter:description" content="The fastest way to schedule across time zones.">
-    <meta name="twitter:image" content="https://useoverlap.com/og-image.png">
+    <meta name="twitter:image" content="https://useoverlap.io/og-image.png">
     
     <!-- PWA -->
     <meta name="theme-color" content="#0a0a0a">
@@ -217,6 +217,30 @@
             gap: 8px;
         }
 
+        .extension-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            background: var(--accent-bg);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.15s;
+        }
+
+        .extension-pill:hover {
+            background: var(--accent);
+            color: #1a1a1a;
+        }
+
+        .extension-pill svg {
+            stroke: currentColor;
+        }
+
         .toggle-label {
             font-size: 12px;
             color: var(--text-muted);
@@ -333,6 +357,17 @@
             flex-shrink: 0;
         }
 
+        .toolbar-spacer {
+            flex: 1;
+        }
+
+        .toggle-24h-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
         /* Compact date picker inline - centered */
         .date-picker-inline {
             display: flex;
@@ -387,6 +422,14 @@
 
         .now-btn-sm:hover {
             background: #dc2626;
+        }
+
+        .selected-time {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            white-space: nowrap;
+            margin-left: 8px;
         }
 
         .find-time-btn {
@@ -979,6 +1022,20 @@
             color: var(--text);
         }
 
+        .footer-divider {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .made-by {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .footer-link:hover {
+            color: var(--text);
+        }
+
         /* Mobile adjustments */
         @media (max-width: 768px) {
             .container {
@@ -1042,8 +1099,15 @@
                 top: 16px;
                 right: 12px;
             }
+            .extension-pill {
+                padding: 4px 8px;
+                font-size: 10px;
+            }
+            .extension-pill svg {
+                display: none;
+            }
             
-            /* Toolbar - keep original layout */
+            /* Toolbar */
             .add-tz-row {
                 flex-wrap: wrap;
                 gap: 8px;
@@ -1051,18 +1115,13 @@
             .add-tz-input {
                 font-size: 13px;
             }
-            .date-picker-inline {
-                flex: 1;
-                justify-content: center;
-            }
-            .date-display-sm {
-                font-size: 11px;
-                font-weight: 600;
-            }
             .find-time-btn {
                 padding: 4px 10px;
                 font-size: 10px;
                 height: 24px;
+            }
+            .toggle-24h-wrap {
+                display: none;
             }
             .now-btn-sm {
                 height: 24px;
@@ -1180,10 +1239,9 @@
                 <p class="tagline">The fastest way to schedule across time zones</p>
             </div>
             <div class="header-right">
-                <span class="toggle-label">24h</span>
-                <button class="toggle-switch" id="toggle24h" role="switch" aria-checked="false">
-                    <span class="toggle-knob"></span>
-                </button>
+                <a href="#" class="extension-pill" id="extensionPill" title="Quick access from any tab">
+                    ⚡ Add to Chrome
+                </a>
             </div>
         </header>
 
@@ -1204,20 +1262,6 @@
                     <input type="text" class="add-tz-input" id="addTzInput" placeholder="Add a place...">
                     <div class="add-tz-results" id="addTzResults"></div>
                 </div>
-                <div class="date-picker-inline">
-                    <button class="date-btn-sm" id="datePrevBtn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="15 18 9 12 15 6"/>
-                        </svg>
-                    </button>
-                    <span class="date-display-sm" id="dateDisplay">Today</span>
-                    <button class="date-btn-sm" id="dateNextBtn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="9 18 15 12 9 6"/>
-                        </svg>
-                    </button>
-                    <button class="now-btn-sm" id="nowBtn">Now</button>
-                </div>
                 <button class="find-time-btn" id="findTimeBtn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="11" cy="11" r="8"/>
@@ -1225,6 +1269,15 @@
                     </svg>
                     Find Time
                 </button>
+                <button class="now-btn-sm" id="nowBtn">Now</button>
+                <span class="selected-time" id="selectedTime"></span>
+                <div class="toolbar-spacer"></div>
+                <div class="toggle-24h-wrap">
+                    <span class="toggle-label">24h</span>
+                    <button class="toggle-switch" id="toggle24h" role="switch" aria-checked="false">
+                        <span class="toggle-knob"></span>
+                    </button>
+                </div>
             </div>
 
             <div class="tz-list-container">
@@ -1283,13 +1336,7 @@
             </div>
         </div>
 
-        <p class="tip" id="tip"><span class="tip-mobile">Drag to select a meeting time</span><span class="tip-desktop">Drag to select · <kbd>A</kbd> add · <kbd>F</kbd> find · <kbd>N</kbd> now · <kbd>⌘C</kbd> copy</span></p>
-        
-        <!-- Update href with Chrome Web Store URL when approved -->
-        <div class="extension-banner" id="extensionBanner">
-            <span class="extension-banner-title">⚡ Get the Chrome Extension</span>
-            <a href="#" class="extension-banner-btn" id="extensionLink">Add to Chrome</a>
-        </div>
+        <p class="tip" id="tip"><span class="tip-mobile">Tap twice to select a time</span><span class="tip-desktop">Drag to select · <kbd>A</kbd> add · <kbd>F</kbd> find · <kbd>N</kbd> now · <kbd>⌘C</kbd> copy</span></p>
         
         <div class="pwa-banner" id="pwaBanner" style="display: none;">
             <span class="extension-banner-title">📱 Add to Home Screen</span>
@@ -1304,6 +1351,8 @@
                 Share
             </button>
             <a href="/privacy.html" class="footer-link">Privacy</a>
+            <span class="footer-divider">·</span>
+            <span class="made-by">Made by Pav Singh</span>
         </div>
     </div>
 
@@ -2510,8 +2559,6 @@
             applyTheme();
             
             const toggle24h = document.getElementById('toggle24h');
-            const datePrevBtn = document.getElementById('datePrevBtn');
-            const dateNextBtn = document.getElementById('dateNextBtn');
             const nowBtn = document.getElementById('nowBtn');
             const findTimeBtn = document.getElementById('findTimeBtn');
             const googleCalBtn = document.getElementById('googleCalBtn');
@@ -2520,6 +2567,7 @@
             const icalBtn = document.getElementById('icalBtn');
             const copyBtn = document.getElementById('copyBtn');
             const addTzInput = document.getElementById('addTzInput');
+            const extensionPill = document.getElementById('extensionPill');
             
             // Apply saved 24h toggle state
             if (toggle24h) toggle24h.classList.toggle('active', use24h);
@@ -2529,8 +2577,6 @@
 
             // Add event listeners for buttons
             if (toggle24h) toggle24h.addEventListener('click', toggle24Hour);
-            if (datePrevBtn) datePrevBtn.addEventListener('click', function() { changeDate(-1); });
-            if (dateNextBtn) dateNextBtn.addEventListener('click', function() { changeDate(1); });
             if (nowBtn) nowBtn.addEventListener('click', goToNow);
             if (findTimeBtn) findTimeBtn.addEventListener('click', findBestTime);
             if (googleCalBtn) googleCalBtn.addEventListener('click', function() { createMeeting('google'); });
@@ -2693,29 +2739,6 @@
             return d;
         }
 
-        function changeDate(delta) {
-            dateOffset += delta;
-            updateDateDisplay();
-            render();
-        }
-
-        function updateDateDisplay() {
-            const today = new Date();
-            today.setHours(0,0,0,0);
-            
-            // Calculate the "selected" day based on dateOffset
-            const selectedDay = new Date(today);
-            selectedDay.setDate(selectedDay.getDate() + dateOffset);
-            
-            let label;
-            if (dateOffset === 0) label = 'Today';
-            else if (dateOffset === 1) label = 'Tomorrow';
-            else if (dateOffset === -1) label = 'Yesterday';
-            else label = selectedDay.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
-            
-            document.getElementById('dateDisplay').textContent = label;
-        }
-
         function goToNow() {
             dateOffset = 0;
             clearSel(); // Clear any selection
@@ -2723,13 +2746,6 @@
             // Scroll to current time after a brief delay to ensure render is complete
             setTimeout(() => {
                 scrollToNow();
-                // Show current time in date picker
-                const now = new Date();
-                const timeFmt = {hour: 'numeric', minute: '2-digit', hour12: !use24h};
-                const dateFmt = {weekday: 'short', month: 'short', day: 'numeric'};
-                const dateStr = now.toLocaleDateString('en-US', dateFmt);
-                const timeStr = now.toLocaleTimeString('en-US', timeFmt);
-                document.getElementById('dateDisplay').textContent = `${dateStr}, ${timeStr}`;
             }, 50);
         }
 
@@ -2748,8 +2764,10 @@
             const wakingOverlaps = [];
             const slotScores = []; // For fallback: track how "good" each slot is
             
-            // Check each hour slot (every 2 slots = 1 hour) across 14 days
-            for (let slotIndex = 0; slotIndex < 672; slotIndex += 2) {
+            // Check each hour slot (every 2 slots = 1 hour) - TODAY ONLY (48 slots = 24 hours)
+            // NOTE: To extend to multiple days in future, change 48 to 672 (14 days)
+            const SLOTS_TO_CHECK = 48; // 24 hours
+            for (let slotIndex = 0; slotIndex < SLOTS_TO_CHECK; slotIndex += 2) {
                 const slotTime = new Date(base.getTime() + slotIndex * 1800000);
                 
                 // Skip if in the past
@@ -2967,6 +2985,11 @@
                 tl.addEventListener('mousemove', dragMove);
                 tl.addEventListener('mousemove', handleHover);
                 tl.addEventListener('mouseleave', hideHover);
+                
+                // Touch support for mobile - tap to select
+                tl.addEventListener('touchstart', handleTouchStart, {passive: false});
+                tl.addEventListener('touchmove', handleTouchMove, {passive: false});
+                tl.addEventListener('touchend', handleTouchEnd);
             });
 
             // Add scroll listeners for timeline sync
@@ -2974,7 +2997,6 @@
                 ts.addEventListener('scroll', () => syncScroll(ts));
             });
 
-            updateDateDisplay();
             tick();
             updateSelectionBox();
         }
@@ -3052,8 +3074,10 @@
             const base = getBaseDate();
 
             let html = '';
-            // 672 slots = 14 days (336 hours)
-            for (let i = 0; i < 672; i++) {
+            // 48 slots = 24 hours (1 day)
+            // NOTE: To extend to multiple days in future, change TOTAL_SLOTS to 672 (14 days)
+            const TOTAL_SLOTS = 48;
+            for (let i = 0; i < TOTAL_SLOTS; i++) {
                 const t = new Date(base.getTime() + i * 1800000);
                 
                 // Get the time in the target timezone
@@ -3093,51 +3117,6 @@
             });
             updateNowLine();
             updateSelectionBox();
-            updateDateFromScroll(el);
-        }
-
-        function updateDateFromScroll(scrollContainer) {
-            // Find the slot that's roughly in the center of the visible area
-            const timeline = scrollContainer.querySelector('.timeline');
-            if (!timeline) return;
-            
-            const slots = timeline.querySelectorAll('.slot');
-            const containerRect = scrollContainer.getBoundingClientRect();
-            const centerX = containerRect.left + containerRect.width / 2;
-            
-            // Find the slot at the center
-            let centerSlot = null;
-            for (const slot of slots) {
-                const rect = slot.getBoundingClientRect();
-                if (rect.left <= centerX && rect.right >= centerX) {
-                    centerSlot = slot;
-                    break;
-                }
-            }
-            
-            if (!centerSlot) return;
-            
-            const timestamp = parseInt(centerSlot.dataset.ts);
-            if (!timestamp) return;
-            
-            const slotDate = new Date(timestamp);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            const slotDay = new Date(slotDate);
-            slotDay.setHours(0, 0, 0, 0);
-            
-            // Calculate day difference
-            const diffDays = Math.round((slotDay - today) / (1000 * 60 * 60 * 24));
-            
-            // Update display without changing dateOffset (don't re-render)
-            let label;
-            if (diffDays === 0) label = 'Today';
-            else if (diffDays === 1) label = 'Tomorrow';
-            else if (diffDays === -1) label = 'Yesterday';
-            else label = slotDay.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
-            
-            document.getElementById('dateDisplay').textContent = label;
         }
 
         function updateNowLine() {
@@ -3236,12 +3215,12 @@
         function updateSelectionBox() {
             const box = document.getElementById('selectionBox');
             const createContainer = document.getElementById('createInviteContainer');
-            const dateDisplay = document.getElementById('dateDisplay');
+            const tip = document.getElementById('tip');
             
             if (sel.start === null || sel.end === null) {
                 box.classList.remove('visible');
                 createContainer.classList.remove('visible');
-                updateDateDisplay(); // Reset to show date
+                if (tip) tip.style.display = '';
                 return;
             }
 
@@ -3308,19 +3287,20 @@
                 }
             }
             
-            // Calculate and display time period in dateDisplay
+            // Calculate time period and show next to Now button
             const base = getBaseDate();
             const startTime = new Date(base.getTime() + min * 1800000);
             const endTime = new Date(base.getTime() + (max + 1) * 1800000);
             
             const timeFmt = {hour: 'numeric', minute: '2-digit', hour12: !use24h};
-            const dateFmt = {weekday: 'short', month: 'short', day: 'numeric'};
             
-            // Show date + time range
-            const dateStr = startTime.toLocaleDateString('en-US', dateFmt);
+            // Show time range next to Now button
             const timeStr = `${startTime.toLocaleTimeString('en-US', timeFmt)} – ${endTime.toLocaleTimeString('en-US', timeFmt)}`;
             
-            dateDisplay.textContent = `${dateStr}, ${timeStr}`;
+            const selectedTimeEl = document.getElementById('selectedTime');
+            if (selectedTimeEl) {
+                selectedTimeEl.textContent = timeStr;
+            }
             
             createContainer.classList.add('visible');
         }
@@ -3346,10 +3326,65 @@
             }
         }
 
+        // Mobile touch support - tap to set start, tap again to set end
+        let touchStartTime = 0;
+        let touchMoved = false;
+        
+        function handleTouchStart(e) {
+            touchStartTime = Date.now();
+            touchMoved = false;
+        }
+        
+        function handleTouchMove(e) {
+            touchMoved = true;
+            // If we have a selection started, extend it while dragging
+            if (sel.start !== null && sel.end !== null) {
+                const touch = e.touches[0];
+                const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                const slot = element?.closest('.slot');
+                if (slot) {
+                    sel.end = parseInt(slot.dataset.i);
+                    updateSelectionBox();
+                }
+            }
+        }
+        
+        function handleTouchEnd(e) {
+            // Only handle taps (not scrolls)
+            const touchDuration = Date.now() - touchStartTime;
+            if (touchMoved && touchDuration > 150) return; // Was a scroll, ignore
+            
+            const touch = e.changedTouches[0];
+            const element = document.elementFromPoint(touch.clientX, touch.clientY);
+            const slot = element?.closest('.slot');
+            
+            if (slot) {
+                e.preventDefault();
+                const i = parseInt(slot.dataset.i);
+                
+                // If no selection, start one
+                if (sel.start === null) {
+                    sel = {start: i, end: i};
+                } 
+                // If tapping same slot, expand to 1 hour (2 slots)
+                else if (sel.start === i && sel.end === i) {
+                    sel.end = Math.min(i + 1, 47); // Expand to 1 hour, max 47
+                }
+                // If we have a start, set the end
+                else if (sel.start !== null) {
+                    sel.end = i;
+                }
+                
+                updateSelectionBox();
+            }
+        }
+
         function clearSel() {
             sel = {start: null, end: null};
             updateSelectionBox();
             document.getElementById('createInviteContainer').classList.remove('visible');
+            const selectedTimeEl = document.getElementById('selectedTime');
+            if (selectedTimeEl) selectedTimeEl.textContent = '';
         }
 
         function createMeeting(platform) {
@@ -3362,8 +3397,8 @@
             const endTime = new Date(base.getTime() + (max + 1) * 1800000);
 
             const fmtISO = d => d.toISOString().replace(/-|:|\.\d+/g, '');
-            const description = encodeURIComponent('Scheduled with Overlap');
-            const title = encodeURIComponent('Meeting');
+            const description = encodeURIComponent('Scheduled with Overlap (useoverlap.io)');
+            const title = encodeURIComponent('');
             
             let url;
             
@@ -3398,7 +3433,7 @@
             const endTime = new Date(base.getTime() + (max + 1) * 1800000);
 
             const fmtICS = d => d.toISOString().replace(/-|:|\.\d+/g, '');
-            const uid = 'overlap-' + Date.now() + '@overlap.app';
+            const uid = 'overlap-' + Date.now() + '@useoverlap.io';
             
             const icsContent = [
                 'BEGIN:VCALENDAR',
@@ -3411,8 +3446,8 @@
                 `DTSTAMP:${fmtICS(new Date())}`,
                 `DTSTART:${fmtICS(startTime)}`,
                 `DTEND:${fmtICS(endTime)}`,
-                'SUMMARY:Meeting',
-                'DESCRIPTION:Scheduled with Overlap',
+                'SUMMARY:',
+                'DESCRIPTION:Scheduled with Overlap (useoverlap.io)',
                 'END:VEVENT',
                 'END:VCALENDAR'
             ].join('\r\n');
