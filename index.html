@@ -1214,15 +1214,15 @@
         }
         
         /* ========================================
-           MOBILE VERTICAL TIMELINE LAYOUT
+           MOBILE LAYOUT ADAPTATIONS
+           Uses same components as desktop, just restyled
            ======================================== */
         
-        /* Hide mobile elements on desktop */
         .mobile-only { display: none; }
         .desktop-only { display: block; }
         
         @media (max-width: 768px) {
-            /* Show mobile, hide desktop */
+            /* Show mobile elements, hide desktop-only */
             .mobile-only { display: block; }
             .desktop-only { display: none !important; }
             
@@ -1242,92 +1242,291 @@
                 flex-direction: column;
                 height: 100%;
                 height: 100dvh;
-                padding: 12px;
-                padding-top: max(12px, env(safe-area-inset-top));
-                padding-bottom: max(8px, env(safe-area-inset-bottom));
+                padding: 0;
+                padding-top: env(safe-area-inset-top);
+                padding-bottom: env(safe-area-inset-bottom);
                 max-width: 100%;
+                overflow: hidden;
             }
             
-            /* Mobile Header */
+            /* ===== HEADER ===== */
             .header {
+                padding: 12px 16px;
                 margin-bottom: 0;
                 flex-shrink: 0;
-            }
-            
-            .header-left {
-                display: flex;
-                align-items: center;
-                gap: 8px;
             }
             
             .logo {
                 font-size: 18px;
             }
             
+            .logo svg {
+                width: 24px;
+                height: 24px;
+            }
+            
             .tagline { display: none; }
             
+            /* Mobile header shows local time on right */
             .header-right {
-                position: static;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 2px;
             }
             
-            /* Mobile hero clock */
-            .mobile-hero {
-                text-align: center;
-                margin-bottom: 16px;
-                flex-shrink: 0;
-            }
-            
-            .mobile-hero-time {
-                font-size: 48px;
+            .mobile-local-time {
+                font-size: 24px;
                 font-weight: 600;
                 line-height: 1;
             }
             
-            .mobile-hero-date {
-                font-size: 14px;
-                color: var(--text-secondary);
-                margin-top: 4px;
-            }
-            
-            .mobile-hero-row {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-                margin-top: 8px;
-            }
-            
-            .mobile-local-badge {
-                font-size: 10px;
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                background: var(--accent-bg);
-                color: var(--accent);
-                padding: 4px 8px;
-                border-radius: 4px;
-            }
-            
-            .mobile-24h-toggle {
-                display: flex;
-                align-items: center;
-                gap: 4px;
-            }
-            
-            .mobile-24h-label {
+            .mobile-local-date {
                 font-size: 11px;
                 color: var(--text-muted);
             }
             
-            /* Selection display bar */
-            .mobile-selection-bar {
-                background: var(--bg-subtle);
-                border: 1px solid var(--border);
-                border-radius: 8px;
+            .mobile-local-badge {
+                font-size: 8px;
+                font-weight: 600;
+                background: var(--accent-bg);
+                color: var(--accent);
+                padding: 2px 6px;
+                border-radius: 3px;
+                margin-top: 2px;
+            }
+            
+            /* Hide the big hero clock on mobile - we show time in header */
+            .hero { display: none; }
+            
+            /* ===== MAIN CONTENT WRAPPER ===== */
+            .tz-wrapper {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+                overflow: hidden;
+                padding: 0 12px;
+            }
+            
+            /* ===== TOOLBAR ROW ===== */
+            .add-tz-row {
+                flex-wrap: nowrap;
+                gap: 8px;
+                padding: 8px 0;
+                margin-bottom: 8px;
+                border-bottom: 1px solid var(--border);
+            }
+            
+            .add-tz-wrap {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .add-tz-input {
+                font-size: 14px;
+                padding: 10px 10px 10px 32px;
+            }
+            
+            .find-time-btn {
                 padding: 8px 12px;
-                margin-bottom: 12px;
+                font-size: 12px;
+            }
+            
+            .now-btn-sm {
+                padding: 8px 12px;
+                font-size: 11px;
+            }
+            
+            .selected-time {
+                display: none; /* Hidden in toolbar, shown in bottom bar */
+            }
+            
+            .toolbar-spacer { display: none; }
+            
+            .toggle-24h-wrap {
                 flex-shrink: 0;
+            }
+            
+            /* ===== TIMEZONE LIST ===== */
+            .tz-list-container {
+                flex: 1;
+                min-height: 0;
+                overflow: hidden;
+                border-radius: 8px;
+                border: 1px solid var(--border);
+            }
+            
+            .tz-list {
+                height: 100%;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .tz-row {
+                min-height: 70px;
+            }
+            
+            /* Zone info column - narrower on mobile */
+            .tz-info {
+                width: 80px;
+                min-width: 80px;
+                padding: 8px;
+            }
+            
+            .tz-city {
+                font-size: 12px;
+            }
+            
+            .tz-meta {
+                font-size: 9px;
+            }
+            
+            .tz-current {
+                font-size: 14px;
+            }
+            
+            .tz-badge {
+                font-size: 7px;
+                padding: 1px 3px;
+            }
+            
+            /* Hide reorder arrows on mobile */
+            .tz-arrows { display: none; }
+            
+            /* Show remove button always on mobile */
+            .tz-remove {
+                opacity: 0.6;
+            }
+            
+            /* Timeline slots - same size as desktop */
+            .timeline {
+                padding: 14px 0 4px 0;
+            }
+            
+            .slot {
+                width: 24px;
+                height: 48px;
+            }
+            
+            .slot-label {
+                width: 48px;
+            }
+            
+            .hour-num {
+                font-size: 13px;
+            }
+            
+            .hour-ampm {
+                font-size: 7px;
+            }
+            
+            .slot-day {
+                font-size: 8px;
+                top: -12px;
+            }
+            
+            /* ===== CALENDAR BUTTONS ===== */
+            .create-invite-container {
+                padding: 10px;
+                margin-top: 8px;
+                flex-shrink: 0;
+            }
+            
+            .create-invite-label {
+                font-size: 9px;
+            }
+            
+            .create-invite-buttons {
+                gap: 8px;
+            }
+            
+            .create-btn-inline {
+                padding: 8px 10px;
+            }
+            
+            .create-btn-inline svg {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .copy-btn-small {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+            
+            /* ===== BOTTOM TOOLBAR ===== */
+            .mobile-bottom-toolbar {
+                display: flex;
+                gap: 12px;
+                padding: 12px 16px;
+                padding-bottom: max(12px, calc(env(safe-area-inset-bottom) + 8px));
+                background: var(--bg);
+                border-top: 1px solid var(--border);
+                flex-shrink: 0;
+            }
+            
+            .mobile-add-btn {
+                flex: 1;
+                padding: 14px;
+                background: transparent;
+                border: 2px dashed var(--border);
+                border-radius: 10px;
+                color: var(--text-muted);
+                font-size: 14px;
+                font-weight: 500;
+                font-family: inherit;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+            
+            .mobile-add-btn:active {
+                background: var(--bg-muted);
+            }
+            
+            .mobile-add-btn svg {
+                width: 16px;
+                height: 16px;
+                stroke: currentColor;
+            }
+            
+            .mobile-find-btn {
+                flex: 1;
+                padding: 14px;
+                background: var(--accent);
+                border: none;
+                border-radius: 10px;
+                color: #000;
+                font-size: 14px;
+                font-weight: 600;
+                font-family: inherit;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+            
+            .mobile-find-btn:active {
+                opacity: 0.9;
+            }
+            
+            .mobile-find-btn svg {
+                width: 16px;
+                height: 16px;
+                stroke: currentColor;
+            }
+            
+            /* ===== SELECTION BAR (above bottom toolbar) ===== */
+            .mobile-selection-bar {
                 display: none;
+                padding: 10px 16px;
+                background: var(--bg-subtle);
+                border-top: 1px solid var(--border);
+                flex-shrink: 0;
             }
             
             .mobile-selection-bar.visible {
@@ -1336,442 +1535,30 @@
                 justify-content: space-between;
             }
             
-            .mobile-selection-row {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-            
-            .mobile-now-btn {
-                padding: 6px 12px;
-                font-size: 12px;
-                font-weight: 600;
-                font-family: inherit;
-                background: var(--red);
-                color: white;
-                border: none;
-                border-radius: 6px;
-                cursor: pointer;
-            }
-            
-            .mobile-selection-text {
+            .mobile-selection-time {
                 font-size: 14px;
                 font-weight: 600;
                 color: var(--accent);
             }
             
-            /* Hide original web layout elements */
-            .hero { display: none !important; }
-            .tz-wrapper { display: none !important; }
-            .tip { display: none !important; }
-            .footer-links .share-btn { display: none !important; }
-            .footer-links .footer-link[href="/privacy.html"] { display: none !important; }
-            .footer-links .footer-divider { display: none !important; }
-            
-            /* Mobile vertical timeline container */
-            .mobile-timeline-container {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                min-height: 0;
-                overflow: hidden;
-                border: 1px solid var(--border);
-                border-radius: 8px;
-                background: var(--bg-subtle);
-            }
-            
-            /* City headers row (horizontal) */
-            .mobile-city-headers {
-                display: flex;
-                flex-shrink: 0;
-                border-bottom: 1px solid var(--border);
-                background: var(--bg);
-            }
-            
-            .mobile-time-col-header {
-                width: 54px;
-                min-width: 54px;
-                padding: 8px 4px;
-                border-right: 1px solid var(--border);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 10px;
-                color: var(--text-muted);
-                text-transform: uppercase;
-            }
-            
-            .mobile-city-header {
-                flex: 1;
-                min-width: 0;
-                padding: 10px 6px 8px 6px;
-                border-right: 1px solid var(--border);
-                position: relative;
-                text-align: center;
-            }
-            
-            .mobile-city-header:last-child {
-                border-right: none;
-            }
-            
-            .mobile-city-name {
-                font-size: 12px;
-                font-weight: 600;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 4px;
-            }
-            
-            .mobile-city-local-dot {
-                width: 6px;
-                height: 6px;
-                background: var(--accent);
-                border-radius: 50%;
-            }
-            
-            .mobile-city-offset {
-                font-size: 9px;
-                color: var(--text-muted);
-                margin-top: 2px;
-            }
-            
-            .mobile-city-delete {
-                position: absolute;
-                top: 4px;
-                right: 4px;
-                width: 16px;
-                height: 16px;
-                border-radius: 50%;
-                background: var(--bg-muted);
-                border: 1px solid var(--border);
-                color: var(--text-muted);
-                font-size: 10px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                line-height: 1;
-                opacity: 0.7;
-            }
-            
-            .mobile-city-delete:active {
-                background: var(--red);
-                color: white;
-                border-color: var(--red);
-                opacity: 1;
-            }
-            
-            /* Time rows (vertical scroll) */
-            .mobile-time-rows {
-                flex: 1;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            .mobile-time-row {
-                display: flex;
-                border-bottom: 1px solid var(--border);
-                min-height: 44px;
-                position: relative;
-            }
-            
-            .mobile-time-row:last-child {
-                border-bottom: none;
-            }
-            
-            /* Time label column */
-            .mobile-time-label {
-                width: 54px;
-                min-width: 54px;
-                padding: 4px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                border-right: 1px solid var(--border);
-                background: var(--bg);
-                font-size: 14px;
-                font-weight: 500;
-            }
-            
-            .mobile-time-label-period {
-                font-size: 9px;
-                color: var(--text-muted);
-                text-transform: uppercase;
-            }
-            
-            .mobile-time-label-date {
-                font-size: 8px;
-                color: var(--accent);
-                margin-top: 2px;
-            }
-            
-            /* Time cells */
-            .mobile-time-cell {
-                flex: 1;
-                min-width: 0;
-                border-right: 1px solid var(--border);
-                cursor: pointer;
-                position: relative;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 13px;
-                color: var(--text-secondary);
-            }
-            
-            .mobile-time-cell:last-child {
-                border-right: none;
-            }
-            
-            .mobile-time-cell.work {
-                background: var(--work-bg);
-                color: var(--text);
-            }
-            
-            .mobile-time-cell.sleep {
-                background: rgba(50, 50, 50, 0.3);
-                color: var(--text-muted);
-            }
-            
-            .mobile-time-cell.selected {
-                background: rgba(245, 166, 35, 0.25);
-            }
-            
-            /* Now indicator */
-            .mobile-time-row.now-row {
-                position: relative;
-            }
-            
-            .mobile-time-row.now-row::before {
-                content: '';
-                position: absolute;
-                left: 0;
-                right: 0;
-                top: 0;
-                height: 2px;
-                background: var(--red);
-                z-index: 5;
-            }
-            
-            .mobile-time-row.now-row .mobile-time-label {
-                color: var(--red);
-                font-weight: 600;
-            }
-            
-            /* Selection borders */
-            .mobile-time-row.sel-start {
-                box-shadow: inset 0 2px 0 var(--accent);
-            }
-            
-            .mobile-time-row.sel-end {
-                box-shadow: inset 0 -2px 0 var(--accent);
-            }
-            
-            .mobile-time-row.sel-start.sel-end {
-                box-shadow: inset 0 2px 0 var(--accent), inset 0 -2px 0 var(--accent);
-            }
-            
-            /* Floating selection label */
-            .mobile-selection-float {
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
-                background: var(--accent);
-                color: #000;
+            .mobile-selection-label {
                 font-size: 11px;
-                font-weight: 600;
-                padding: 4px 10px;
-                border-radius: 4px;
-                white-space: nowrap;
-                z-index: 10;
-                pointer-events: none;
+                color: var(--text-muted);
             }
             
-            /* Calendar buttons panel */
-            .mobile-calendar-panel {
-                background: var(--bg);
-                border-top: 1px solid var(--border);
-                padding: 12px;
-                flex-shrink: 0;
+            /* ===== TIP ===== */
+            .tip {
                 display: none;
             }
             
-            .mobile-calendar-panel.visible {
-                display: block;
+            /* ===== FOOTER ===== */
+            .footer-links {
+                display: none !important;
             }
             
-            .mobile-calendar-label {
-                font-size: 9px;
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                color: var(--text-muted);
-                margin-bottom: 8px;
-                text-align: center;
-            }
-            
-            .mobile-calendar-buttons {
-                display: flex;
-                justify-content: center;
-                gap: 10px;
-            }
-            
-            .mobile-cal-btn {
-                width: 44px;
-                height: 44px;
-                border-radius: 10px;
-                border: 1px solid var(--border);
-                background: var(--bg-muted);
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .mobile-cal-btn:active {
-                transform: scale(0.95);
-            }
-            
-            .mobile-cal-btn svg {
-                width: 24px;
-                height: 24px;
-            }
-            
-            .mobile-copy-btn {
-                padding: 0 16px;
-                width: auto;
-                font-size: 12px;
-                font-family: inherit;
-                color: var(--text-secondary);
-                gap: 4px;
-            }
-            
-            /* Bottom toolbar */
-            .mobile-bottom-toolbar {
-                display: flex;
-                gap: 10px;
-                padding-top: 12px;
-                flex-shrink: 0;
-            }
-            
-            .mobile-add-place-wrap {
-                flex: 1;
-                position: relative;
-            }
-            
-            .mobile-add-place-input {
-                width: 100%;
-                padding: 14px 14px 14px 40px;
-                font-size: 16px;
-                font-family: inherit;
-                background: var(--bg-subtle);
-                border: 1px dashed var(--border);
-                border-radius: 10px;
-                color: var(--text);
-                outline: none;
-            }
-            
-            .mobile-add-place-input::placeholder {
-                color: var(--text-muted);
-            }
-            
-            .mobile-add-place-input:focus {
-                border-style: solid;
-                border-color: var(--accent);
-            }
-            
-            .mobile-add-place-input:disabled {
-                opacity: 0.5;
-                cursor: not-allowed;
-            }
-            
-            .mobile-add-place-icon {
-                position: absolute;
-                left: 12px;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 20px;
-                height: 20px;
-                color: var(--text-muted);
-            }
-            
-            .mobile-search-results {
-                position: absolute;
-                bottom: 100%;
-                left: 0;
-                right: 0;
-                background: var(--bg-subtle);
-                border: 1px solid var(--border);
-                border-radius: 10px;
-                margin-bottom: 6px;
-                max-height: 200px;
-                overflow-y: auto;
-                z-index: 100;
-                display: none;
-            }
-            
-            .mobile-search-results.open {
-                display: block;
-            }
-            
-            .mobile-search-result {
-                padding: 12px 14px;
-                border-bottom: 1px solid var(--border);
-            }
-            
-            .mobile-search-result:last-child {
-                border-bottom: none;
-            }
-            
-            .mobile-search-result:active {
-                background: var(--bg-muted);
-            }
-            
-            .mobile-search-result-city {
-                font-weight: 500;
-                font-size: 15px;
-            }
-            
-            .mobile-search-result-region {
-                font-size: 12px;
-                color: var(--text-muted);
-                margin-top: 2px;
-            }
-            
-            .mobile-find-btn {
-                padding: 14px 20px;
-                font-size: 15px;
-                font-weight: 600;
-                font-family: inherit;
-                background: var(--accent);
-                color: #000;
-                border: none;
-                border-radius: 10px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                white-space: nowrap;
-            }
-            
-            .mobile-find-btn:active {
-                opacity: 0.9;
-            }
-            
-            .mobile-find-btn svg {
-                width: 18px;
-                height: 18px;
-            }
-            
-            /* Mobile footer */
             .mobile-footer {
                 text-align: center;
-                padding: 8px 0 4px 0;
+                padding: 4px 16px 8px 16px;
                 flex-shrink: 0;
             }
             
@@ -1781,14 +1568,27 @@
                 text-decoration: none;
             }
             
-            /* PWA banner styling */
-            .pwa-banner {
-                margin-bottom: 12px;
+            /* ===== ADD TO HOME BUTTON (matches Add to Chrome style) ===== */
+            .mobile-install-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 14px;
+                font-size: 13px;
+                font-weight: 500;
+                font-family: inherit;
+                border-radius: 20px;
+                cursor: pointer;
+                background: transparent;
+                border: 1px solid var(--accent);
+                color: var(--accent);
+                transition: all 0.15s;
             }
             
-            /* Hide desktop footer */
-            .footer-links {
-                display: none !important;
+            .mobile-install-btn:hover,
+            .mobile-install-btn:active {
+                background: var(--accent);
+                color: #000;
             }
         }
     </style>
@@ -1810,9 +1610,16 @@
                 <a href="#" class="extension-pill desktop-only" id="extensionPill" title="Quick access from any tab">
                     ⚡ Add to Chrome
                 </a>
-                <a href="#" class="extension-pill mobile-only" id="mobileInstallPill" style="display:none;">
+                <!-- Mobile: show install button styled like Add to Chrome -->
+                <button class="mobile-install-btn mobile-only" id="mobileInstallBtn">
                     📱 Add to Home
-                </a>
+                </button>
+                <!-- Mobile: local time display -->
+                <div class="mobile-only" style="text-align: right; margin-top: 8px;">
+                    <div class="mobile-local-time" id="mobileLocalTime">--:--</div>
+                    <div class="mobile-local-date" id="mobileLocalDate">--</div>
+                    <div class="mobile-local-badge">LOCAL</div>
+                </div>
             </div>
         </header>
 
@@ -1926,100 +1733,36 @@
             <span class="made-by">Made by <a href="https://www.linkedin.com/in/pavmadhan/" target="_blank" class="footer-link">Pav Singh</a></span>
         </div>
         
-        <!-- ========== MOBILE LAYOUT ========== -->
-        <div class="mobile-only">
-            <!-- Mobile Hero Clock -->
-            <div class="mobile-hero">
-                <div class="mobile-hero-time" id="mobileHeroTime">--:--</div>
-                <div class="mobile-hero-date" id="mobileHeroDate">--</div>
-                <div class="mobile-hero-row">
-                    <span class="mobile-local-badge">Local</span>
-                    <div class="mobile-24h-toggle">
-                        <span class="mobile-24h-label">24h</span>
-                        <button class="toggle-switch" id="mobileToggle24h" role="switch">
-                            <span class="toggle-knob"></span>
-                        </button>
-                    </div>
-                </div>
+        <!-- ========== MOBILE ADDITIONS ========== -->
+        <!-- Selection bar (shown above bottom toolbar when time selected) -->
+        <div class="mobile-selection-bar mobile-only" id="mobileSelectionBar">
+            <div>
+                <div class="mobile-selection-time" id="mobileSelectionTime">--</div>
+                <div class="mobile-selection-label">Local time</div>
             </div>
-            
-            <!-- Mobile Selection Bar -->
-            <div class="mobile-selection-bar" id="mobileSelectionBar">
-                <div class="mobile-selection-row">
-                    <button class="mobile-now-btn" id="mobileNowBtn">Now</button>
-                    <span class="mobile-selection-text" id="mobileSelectionText">--</span>
-                </div>
-            </div>
-            
-            <!-- Mobile Timeline Container -->
-            <div class="mobile-timeline-container">
-                <!-- City Headers -->
-                <div class="mobile-city-headers" id="mobileCityHeaders"></div>
-                
-                <!-- Time Rows -->
-                <div class="mobile-time-rows" id="mobileTimeRows"></div>
-                
-                <!-- Calendar Panel (shown when selection exists) -->
-                <div class="mobile-calendar-panel" id="mobileCalendarPanel">
-                    <div class="mobile-calendar-label">ADD TO CALENDAR</div>
-                    <div class="mobile-calendar-buttons">
-                        <button class="mobile-cal-btn" id="mobileGoogleBtn" title="Google Calendar">
-                            <svg viewBox="0 0 24 24" fill="none">
-                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                            </svg>
-                        </button>
-                        <button class="mobile-cal-btn" id="mobileTeamsBtn" title="Microsoft Teams">
-                            <svg viewBox="0 0 24 24" fill="none">
-                                <path d="M20.5 6h-5V4.5A1.5 1.5 0 0014 3h-4a1.5 1.5 0 00-1.5 1.5V6h-5A1.5 1.5 0 002 7.5v10A1.5 1.5 0 003.5 19h17a1.5 1.5 0 001.5-1.5v-10A1.5 1.5 0 0020.5 6z" fill="#5059C9"/>
-                                <circle cx="17" cy="5" r="2.5" fill="#7B83EB"/>
-                                <circle cx="12" cy="10" r="3" fill="white"/>
-                                <path d="M7 18v-4a5 5 0 0110 0v4H7z" fill="white"/>
-                            </svg>
-                        </button>
-                        <button class="mobile-cal-btn" id="mobileZoomBtn" title="Zoom">
-                            <svg viewBox="0 0 24 24" fill="none">
-                                <rect x="2" y="5" width="20" height="14" rx="3" fill="#2D8CFF"/>
-                                <path d="M7 9.5h6v5H7z" fill="white"/>
-                                <path d="M14 10l4-2v8l-4-2v-4z" fill="white"/>
-                            </svg>
-                        </button>
-                        <button class="mobile-cal-btn mobile-copy-btn" id="mobileCopyBtn">
-                            <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
-                                <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"/>
-                                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="currentColor" stroke-width="2"/>
-                            </svg>
-                            Copy
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Bottom Toolbar -->
-            <div class="mobile-bottom-toolbar">
-                <div class="mobile-add-place-wrap">
-                    <svg class="mobile-add-place-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="12" y1="5" x2="12" y2="19"/>
-                        <line x1="5" y1="12" x2="19" y2="12"/>
-                    </svg>
-                    <input type="text" class="mobile-add-place-input" id="mobileAddInput" placeholder="Add a place...">
-                    <div class="mobile-search-results" id="mobileSearchResults"></div>
-                </div>
-                <button class="mobile-find-btn" id="mobileFindBtn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <circle cx="11" cy="11" r="8"/>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                    </svg>
-                    Find Time
-                </button>
-            </div>
-            
-            <!-- Mobile Footer -->
-            <div class="mobile-footer">
-                <a href="https://www.linkedin.com/in/pavmadhan/" target="_blank">Made by Pav Singh</a>
-            </div>
+        </div>
+        
+        <!-- Bottom toolbar for thumb access -->
+        <div class="mobile-bottom-toolbar mobile-only">
+            <button class="mobile-add-btn" id="mobileAddBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Add a place...
+            </button>
+            <button class="mobile-find-btn" id="mobileBottomFindBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                Find Time
+            </button>
+        </div>
+        
+        <!-- Mobile footer -->
+        <div class="mobile-footer mobile-only">
+            <a href="https://www.linkedin.com/in/pavmadhan/" target="_blank">Made by Pav Singh</a>
         </div>
     </div>
 
@@ -4290,422 +4033,124 @@
         }
 
         // ========================================
-        // MOBILE VERTICAL TIMELINE FUNCTIONALITY
+        // MOBILE ADAPTATIONS
+        // Uses same render/logic as desktop, just hooks up mobile-specific UI
         // ========================================
-        
-        const MAX_MOBILE_ZONES = 5;
-        let mobileSelection = { start: null, end: null };
         
         function isMobile() {
             return window.innerWidth <= 768;
         }
         
-        function renderMobile() {
-            if (!isMobile()) return;
-            
-            const cityHeaders = document.getElementById('mobileCityHeaders');
-            const timeRows = document.getElementById('mobileTimeRows');
-            const addInput = document.getElementById('mobileAddInput');
-            
-            if (!cityHeaders || !timeRows) return;
-            
-            const now = new Date();
-            const baseDate = getBaseDate();
-            const TOTAL_SLOTS = 48;
-            
-            // Ensure local timezone is always first
-            const localIdx = zones.findIndex(z => z.tz === browserTz);
-            if (localIdx > 0) {
-                const localZone = zones.splice(localIdx, 1)[0];
-                zones.unshift(localZone);
-                saveZones();
-            }
-            
-            // Render city headers - first column is just for time labels (empty header)
-            let headersHtml = '<div class="mobile-time-col-header"></div>';
-            zones.forEach((z, i) => {
-                const isLocal = z.tz === browserTz;
-                const canDelete = zones.length > 1 && !isLocal;
-                headersHtml += `
-                    <div class="mobile-city-header" data-idx="${i}">
-                        ${canDelete ? `<button class="mobile-city-delete" data-idx="${i}">×</button>` : ''}
-                        <div class="mobile-city-name">
-                            ${z.city}
-                            ${isLocal ? '<span class="mobile-city-local-dot"></span>' : ''}
-                        </div>
-                        <div class="mobile-city-offset">${getOffset(z.tz)}</div>
-                    </div>
-                `;
-            });
-            cityHeaders.innerHTML = headersHtml;
-            
-            // Render time rows
-            let rowsHtml = '';
-            let lastDay = '';
-            
-            for (let s = 0; s < TOTAL_SLOTS; s++) {
-                const slotTime = new Date(baseDate.getTime() + s * 1800000);
-                const localHour = parseInt(slotTime.toLocaleString('en-US', { timeZone: browserTz, hour: 'numeric', hour12: false }));
-                const localMin = slotTime.getMinutes();
-                
-                // Time label formatting
-                const showLabel = localMin === 0;
-                const h12 = localHour % 12 || 12;
-                const period = localHour < 12 ? 'AM' : 'PM';
-                const hourStr = use24h ? `${localHour}:00` : h12;
-                
-                // Day indicator
-                const dayStr = slotTime.toLocaleDateString('en-US', { timeZone: browserTz, day: 'numeric', weekday: 'short' });
-                const showDay = dayStr !== lastDay && s > 0;
-                lastDay = dayStr;
-                
-                // Selection state
-                const isSelected = mobileSelection.start !== null && mobileSelection.end !== null && 
-                                   s >= mobileSelection.start && s <= mobileSelection.end;
-                const isStart = s === mobileSelection.start;
-                const isEnd = s === mobileSelection.end;
-                const isNow = s === 0;
-                
-                const rowClasses = [
-                    'mobile-time-row',
-                    isNow ? 'now-row' : '',
-                    isSelected ? 'selected' : '',
-                    isStart ? 'sel-start' : '',
-                    isEnd ? 'sel-end' : ''
-                ].filter(Boolean).join(' ');
-                
-                rowsHtml += `<div class="${rowClasses}" data-slot="${s}">`;
-                
-                // Time label column
-                rowsHtml += `<div class="mobile-time-label">`;
-                if (showLabel) {
-                    rowsHtml += `<span>${hourStr}</span>`;
-                    if (!use24h) rowsHtml += `<span class="mobile-time-label-period">${period}</span>`;
-                }
-                if (showDay) rowsHtml += `<span class="mobile-time-label-date">${dayStr}</span>`;
-                rowsHtml += `</div>`;
-                
-                // City time cells
-                zones.forEach((z, i) => {
-                    const tzHour = parseInt(slotTime.toLocaleString('en-US', { timeZone: z.tz, hour: 'numeric', hour12: false }));
-                    const isWork = tzHour >= 9 && tzHour < 18;
-                    const isSleep = tzHour < 7 || tzHour >= 22;
-                    
-                    // Format time for display in cell
-                    const cellH12 = tzHour % 12 || 12;
-                    const cellPeriod = tzHour < 12 ? 'AM' : 'PM';
-                    const cellTimeStr = use24h ? `${tzHour}` : `${cellH12} ${cellPeriod}`;
-                    
-                    const cellClasses = [
-                        'mobile-time-cell',
-                        isWork ? 'work' : (isSleep ? 'sleep' : ''),
-                        isSelected ? 'selected' : ''
-                    ].filter(Boolean).join(' ');
-                    
-                    rowsHtml += `<div class="${cellClasses}" data-slot="${s}" data-zone="${i}">${cellTimeStr}</div>`;
-                });
-                
-                // Add floating selection label at end row
-                if (isEnd && mobileSelection.start !== null) {
-                    const startTime = new Date(baseDate.getTime() + mobileSelection.start * 1800000);
-                    const endTime = new Date(baseDate.getTime() + (mobileSelection.end + 1) * 1800000);
-                    const fmt = { hour: 'numeric', minute: '2-digit', hour12: !use24h };
-                    const startStr = startTime.toLocaleTimeString('en-US', fmt);
-                    const endStr = endTime.toLocaleTimeString('en-US', fmt);
-                    rowsHtml += `<span class="mobile-selection-float">${startStr} - ${endStr}</span>`;
-                }
-                
-                rowsHtml += `</div>`;
-            }
-            timeRows.innerHTML = rowsHtml;
-            
-            // Update add input state (disabled when max zones reached)
-            if (addInput) {
-                addInput.disabled = zones.length >= MAX_MOBILE_ZONES;
-                addInput.placeholder = zones.length >= MAX_MOBILE_ZONES ? 'Max 5 cities' : 'Add a place...';
-            }
-            
-            // Setup mobile event listeners
-            setupMobileListeners();
-            updateMobileUI();
-        }
-        
-        function setupMobileListeners() {
-            // Delete buttons
-            document.querySelectorAll('.mobile-city-delete').forEach(btn => {
-                btn.onclick = (e) => {
-                    e.stopPropagation();
-                    const idx = parseInt(btn.dataset.idx);
-                    if (zones.length > 1 && zones[idx].tz !== browserTz) {
-                        zones.splice(idx, 1);
-                        saveZones();
-                        renderMobile();
-                    }
-                };
-            });
-            
-            // Time cell/row clicks
-            document.querySelectorAll('.mobile-time-cell').forEach(cell => {
-                cell.onclick = () => {
-                    const s = parseInt(cell.dataset.slot);
-                    handleMobileTap(s);
-                };
-            });
-            
-            // Also allow tapping the time label
-            document.querySelectorAll('.mobile-time-label').forEach(label => {
-                label.onclick = () => {
-                    const row = label.closest('.mobile-time-row');
-                    if (row) {
-                        const s = parseInt(row.dataset.slot);
-                        handleMobileTap(s);
-                    }
-                };
-            });
-        }
-        
-        function handleMobileTap(s) {
-            if (mobileSelection.start === null) {
-                mobileSelection.start = s;
-                mobileSelection.end = null;
-            } else if (mobileSelection.end === null) {
-                if (s >= mobileSelection.start) {
-                    mobileSelection.end = s;
-                } else {
-                    mobileSelection.end = mobileSelection.start;
-                    mobileSelection.start = s;
-                }
-            } else {
-                mobileSelection.start = s;
-                mobileSelection.end = null;
-            }
-            
-            // Sync with desktop selection
-            sel.start = mobileSelection.start;
-            sel.end = mobileSelection.end;
-            
-            renderMobile();
-        }
-        
-        function updateMobileUI() {
-            const selectionBar = document.getElementById('mobileSelectionBar');
-            const selectionText = document.getElementById('mobileSelectionText');
-            const calendarPanel = document.getElementById('mobileCalendarPanel');
-            
-            if (mobileSelection.start !== null && mobileSelection.end !== null) {
-                const baseDate = getBaseDate();
-                const startTime = new Date(baseDate.getTime() + mobileSelection.start * 1800000);
-                const endTime = new Date(baseDate.getTime() + (mobileSelection.end + 1) * 1800000);
-                const fmt = { hour: 'numeric', minute: '2-digit', hour12: !use24h };
-                const startStr = startTime.toLocaleTimeString('en-US', fmt);
-                const endStr = endTime.toLocaleTimeString('en-US', fmt);
-                
-                if (selectionBar) selectionBar.classList.add('visible');
-                if (selectionText) selectionText.textContent = `${startStr} – ${endStr} (Local)`;
-                if (calendarPanel) calendarPanel.classList.add('visible');
-            } else {
-                if (selectionBar) selectionBar.classList.remove('visible');
-                if (calendarPanel) calendarPanel.classList.remove('visible');
-            }
-        }
-        
-        function mobileFindTime() {
-            const baseDate = getBaseDate();
-            const TOTAL_SLOTS = 48;
-            const valid = [];
-            
-            for (let s = 0; s < TOTAL_SLOTS; s++) {
-                const slotTime = new Date(baseDate.getTime() + s * 1800000);
-                let allWorking = true;
-                
-                for (const zone of zones) {
-                    const h = parseInt(slotTime.toLocaleString('en-US', { timeZone: zone.tz, hour: 'numeric', hour12: false }));
-                    if (h < 9 || h >= 18) {
-                        allWorking = false;
-                        break;
-                    }
-                }
-                
-                if (allWorking) valid.push(s);
-            }
-            
-            if (valid.length > 0) {
-                mobileSelection.start = valid[0];
-                mobileSelection.end = valid[Math.min(3, valid.length - 1)];
-                
-                // Sync with desktop
-                sel.start = mobileSelection.start;
-                sel.end = mobileSelection.end;
-                
-                renderMobile();
-                
-                // Scroll to selection
-                const selRow = document.querySelector('.mobile-time-row.sel-start');
-                if (selRow) selRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } else {
-                const btn = document.getElementById('mobileFindBtn');
-                if (btn) {
-                    btn.style.background = 'var(--red)';
-                    setTimeout(() => btn.style.background = '', 500);
-                }
-            }
-        }
-        
-        function mobileNow() {
-            mobileSelection = { start: null, end: null };
-            sel = { start: null, end: null };
-            findTimeIndex = -1;
-            renderMobile();
-            
-            // Scroll to top
-            const timeRows = document.getElementById('mobileTimeRows');
-            if (timeRows) timeRows.scrollTop = 0;
-        }
-        
-        function tickMobile() {
+        // Update mobile header time display
+        function updateMobileHeader() {
             if (!isMobile()) return;
             
             const now = new Date();
             const hourFormat = use24h ? '2-digit' : 'numeric';
             
-            const heroTime = document.getElementById('mobileHeroTime');
-            const heroDate = document.getElementById('mobileHeroDate');
+            const timeEl = document.getElementById('mobileLocalTime');
+            const dateEl = document.getElementById('mobileLocalDate');
             
-            if (heroTime) heroTime.textContent = now.toLocaleTimeString('en-US', { hour: hourFormat, minute: '2-digit', hour12: !use24h });
-            if (heroDate) heroDate.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            if (timeEl) {
+                timeEl.textContent = now.toLocaleTimeString('en-US', { 
+                    hour: hourFormat, 
+                    minute: '2-digit', 
+                    hour12: !use24h 
+                });
+            }
+            if (dateEl) {
+                dateEl.textContent = now.toLocaleDateString('en-US', { 
+                    weekday: 'short', 
+                    month: 'short', 
+                    day: 'numeric' 
+                });
+            }
         }
         
-        // Mobile search functionality
-        const mobileAddInput = document.getElementById('mobileAddInput');
-        const mobileSearchResults = document.getElementById('mobileSearchResults');
-        
-        if (mobileAddInput) {
-            mobileAddInput.addEventListener('input', (e) => {
-                const q = e.target.value.toLowerCase().trim();
-                if (q.length < 2 || zones.length >= MAX_MOBILE_ZONES) {
-                    mobileSearchResults.classList.remove('open');
-                    return;
-                }
-                
-                let results = [];
-                
-                // Check aliases
-                const aliasMatch = Object.entries(cityAliases).find(([name]) => 
-                    name.toLowerCase().includes(q)
-                );
-                if (aliasMatch) {
-                    const tzData = allTimezones.find(t => t.tz === aliasMatch[1]);
-                    if (tzData && !zones.find(z => z.tz === tzData.tz)) results.push(tzData);
-                }
-                
-                // Search all timezones
-                const matches = allTimezones.filter(t => 
-                    (t.city.toLowerCase().includes(q) || t.region.toLowerCase().includes(q)) &&
-                    !zones.find(z => z.tz === t.tz)
-                ).slice(0, 8);
-                
-                results = [...results, ...matches.filter(m => !results.find(r => r.tz === m.tz))].slice(0, 6);
-                
-                if (results.length === 0) {
-                    mobileSearchResults.classList.remove('open');
-                    return;
-                }
-                
-                mobileSearchResults.innerHTML = results.map(r => `
-                    <div class="mobile-search-result" data-tz="${r.tz}" data-city="${r.city}" data-region="${r.region}">
-                        <div class="mobile-search-result-city">${r.city}</div>
-                        <div class="mobile-search-result-region">${r.region} · ${getOffset(r.tz)}</div>
-                    </div>
-                `).join('');
-                mobileSearchResults.classList.add('open');
-            });
+        // Update mobile selection bar (mirrors desktop selection)
+        function updateMobileSelectionBar() {
+            const bar = document.getElementById('mobileSelectionBar');
+            const timeEl = document.getElementById('mobileSelectionTime');
             
-            mobileAddInput.addEventListener('blur', () => {
-                setTimeout(() => mobileSearchResults.classList.remove('open'), 200);
-            });
+            if (!bar || !timeEl) return;
+            
+            if (sel.start !== null && sel.end !== null) {
+                const base = getBaseDate();
+                const min = Math.min(sel.start, sel.end);
+                const max = Math.max(sel.start, sel.end);
+                const startTime = new Date(base.getTime() + min * 1800000);
+                const endTime = new Date(base.getTime() + (max + 1) * 1800000);
+                const fmt = { hour: 'numeric', minute: '2-digit', hour12: !use24h };
+                
+                timeEl.textContent = `${startTime.toLocaleTimeString('en-US', fmt)} – ${endTime.toLocaleTimeString('en-US', fmt)}`;
+                bar.classList.add('visible');
+            } else {
+                bar.classList.remove('visible');
+            }
         }
         
-        if (mobileSearchResults) {
-            mobileSearchResults.addEventListener('click', (e) => {
-                const result = e.target.closest('.mobile-search-result');
-                if (result && zones.length < MAX_MOBILE_ZONES) {
-                    zones.push({
-                        city: result.dataset.city,
-                        region: result.dataset.region,
-                        tz: result.dataset.tz
-                    });
-                    saveZones();
-                    mobileAddInput.value = '';
-                    mobileAddInput.blur();
-                    mobileSearchResults.classList.remove('open');
-                    renderMobile();
-                }
-            });
-        }
+        // Hook into existing updateSelectionBox to also update mobile bar
+        const originalUpdateSelectionBox = updateSelectionBox;
+        updateSelectionBox = function() {
+            originalUpdateSelectionBox();
+            updateMobileSelectionBar();
+        };
         
-        // Mobile button event listeners
-        const mobileFindBtn = document.getElementById('mobileFindBtn');
-        if (mobileFindBtn) mobileFindBtn.onclick = mobileFindTime;
-        
-        const mobileNowBtn = document.getElementById('mobileNowBtn');
-        if (mobileNowBtn) mobileNowBtn.onclick = mobileNow;
-        
-        // Mobile 24h toggle
-        const mobileToggle24h = document.getElementById('mobileToggle24h');
-        if (mobileToggle24h) {
-            if (use24h) mobileToggle24h.classList.add('active');
-            mobileToggle24h.onclick = () => {
-                use24h = !use24h;
-                mobileToggle24h.classList.toggle('active', use24h);
-                document.getElementById('toggle24h')?.classList.toggle('active', use24h);
-                savePrefs();
-                tickMobile();
-                renderMobile();
+        // Mobile bottom toolbar buttons - hook into existing desktop functions
+        const mobileAddBtn = document.getElementById('mobileAddBtn');
+        if (mobileAddBtn) {
+            mobileAddBtn.onclick = () => {
+                // Focus the desktop add input (it's still in DOM, just restyled)
+                const input = document.getElementById('addTzInput');
+                if (input) input.focus();
             };
         }
         
-        // Mobile calendar buttons
-        const mobileGoogleBtn = document.getElementById('mobileGoogleBtn');
-        if (mobileGoogleBtn) mobileGoogleBtn.onclick = () => openGoogleCalendar();
+        const mobileBottomFindBtn = document.getElementById('mobileBottomFindBtn');
+        if (mobileBottomFindBtn) {
+            // Use the same findBestTime function as desktop
+            mobileBottomFindBtn.onclick = findBestTime;
+        }
         
-        const mobileTeamsBtn = document.getElementById('mobileTeamsBtn');
-        if (mobileTeamsBtn) mobileTeamsBtn.onclick = () => openTeamsCalendar();
-        
-        const mobileZoomBtn = document.getElementById('mobileZoomBtn');
-        if (mobileZoomBtn) mobileZoomBtn.onclick = () => openZoomMeeting();
-        
-        const mobileCopyBtn = document.getElementById('mobileCopyBtn');
-        if (mobileCopyBtn) {
-            mobileCopyBtn.onclick = () => {
-                copyToClipboard();
-                mobileCopyBtn.innerHTML = '✓ Copied';
-                setTimeout(() => {
-                    mobileCopyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" width="16" height="16"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="currentColor" stroke-width="2"/></svg>Copy`;
-                }, 1500);
+        // Mobile install button
+        const mobileInstallBtn = document.getElementById('mobileInstallBtn');
+        if (mobileInstallBtn) {
+            mobileInstallBtn.onclick = async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        mobileInstallBtn.style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                } else {
+                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                    if (isIOS) {
+                        alert('To add to Home Screen:\n1. Tap the Share button\n2. Scroll down and tap "Add to Home Screen"');
+                    } else {
+                        alert('To install:\n1. Tap the menu (⋮)\n2. Tap "Add to Home Screen" or "Install App"');
+                    }
+                }
             };
         }
         
-        // Handle resize to switch between desktop and mobile
+        // Handle resize
         let wasMobile = isMobile();
         window.addEventListener('resize', () => {
             const nowMobile = isMobile();
             if (nowMobile !== wasMobile) {
                 wasMobile = nowMobile;
                 if (nowMobile) {
-                    // Sync selection from desktop to mobile
-                    mobileSelection.start = sel.start;
-                    mobileSelection.end = sel.end;
-                    renderMobile();
-                    tickMobile();
+                    updateMobileHeader();
+                    updateMobileSelectionBar();
                 }
             }
         });
         
-        // Initialize mobile on load
+        // Initialize mobile
         if (isMobile()) {
-            renderMobile();
-            tickMobile();
-            setInterval(tickMobile, 1000);
+            updateMobileHeader();
+            setInterval(updateMobileHeader, 1000);
         }
     </script>
 </body>
