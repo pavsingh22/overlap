@@ -1254,6 +1254,15 @@
                 padding: 12px 16px;
                 margin-bottom: 0;
                 flex-shrink: 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .header-left {
+                display: flex;
+                align-items: center;
+                gap: 6px;
             }
             
             .logo {
@@ -1267,36 +1276,14 @@
             
             .tagline { display: none; }
             
-            /* Mobile header shows local time on right */
+            /* Mobile header right - local time */
             .header-right {
                 display: flex;
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 2px;
+                align-items: center;
+                gap: 8px;
             }
             
-            .mobile-local-time {
-                font-size: 24px;
-                font-weight: 600;
-                line-height: 1;
-            }
-            
-            .mobile-local-date {
-                font-size: 11px;
-                color: var(--text-muted);
-            }
-            
-            .mobile-local-badge {
-                font-size: 8px;
-                font-weight: 600;
-                background: var(--accent-bg);
-                color: var(--accent);
-                padding: 2px 6px;
-                border-radius: 3px;
-                margin-top: 2px;
-            }
-            
-            /* Hide the big hero clock on mobile - we show time in header */
+            /* Hide the big hero clock on mobile */
             .hero { display: none; }
             
             /* ===== MAIN CONTENT WRAPPER ===== */
@@ -1311,71 +1298,74 @@
             
             /* ===== TOOLBAR ROW ===== */
             .add-tz-row {
-                flex-wrap: nowrap;
+                display: flex;
+                align-items: center;
                 gap: 8px;
                 padding: 8px 0;
                 margin-bottom: 8px;
-                border-bottom: 1px solid var(--border);
             }
             
-            .add-tz-wrap {
-                flex: 1;
-                min-width: 0;
-            }
-            
-            .add-tz-input {
-                font-size: 14px;
-                padding: 10px 10px 10px 32px;
-            }
-            
-            .find-time-btn {
-                padding: 8px 12px;
-                font-size: 12px;
-            }
+            /* Hide desktop add input and find button */
+            .add-tz-wrap { display: none; }
+            .find-time-btn { display: none; }
             
             .now-btn-sm {
-                padding: 8px 12px;
+                padding: 6px 12px;
                 font-size: 11px;
             }
             
             .selected-time {
-                display: none; /* Hidden in toolbar, shown in bottom bar */
+                flex: 1;
+                font-size: 13px;
             }
-            
-            .toolbar-spacer { display: none; }
             
             .toggle-24h-wrap {
                 flex-shrink: 0;
             }
             
-            /* ===== TIMEZONE LIST ===== */
+            .toggle-label {
+                font-size: 10px;
+            }
+            
+            /* ===== TIMEZONE LIST - match web styling ===== */
             .tz-list-container {
-                flex: 1;
+                position: relative;
+                flex: 0 1 auto;
                 min-height: 0;
                 overflow: hidden;
-                border-radius: 8px;
-                border: 1px solid var(--border);
             }
             
             .tz-list {
-                height: 100%;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                overflow: hidden;
             }
             
             .tz-row {
                 min-height: 70px;
+                border-bottom: 1px solid var(--border);
             }
             
-            /* Zone info column - narrower on mobile */
+            .tz-row:last-child {
+                border-bottom: none;
+            }
+            
             .tz-info {
-                width: 80px;
-                min-width: 80px;
-                padding: 8px;
+                width: 90px;
+                min-width: 90px;
+                padding: 8px 10px;
+                border-right: 1px solid var(--border);
             }
             
             .tz-city {
-                font-size: 12px;
+                font-size: 14px;
+            }
+            
+            .tz-badge {
+                font-size: 7px;
+                padding: 1px 3px;
+                margin-left: 4px;
+                vertical-align: middle;
             }
             
             .tz-meta {
@@ -1383,23 +1373,32 @@
             }
             
             .tz-current {
-                font-size: 14px;
+                font-size: 15px;
             }
             
-            .tz-badge {
-                font-size: 7px;
-                padding: 1px 3px;
+            /* Show reorder arrows on mobile */
+            .tz-arrows {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                padding: 0 4px;
+                opacity: 0.5;
             }
             
-            /* Hide reorder arrows on mobile */
-            .tz-arrows { display: none; }
+            .tz-arrow {
+                padding: 4px;
+            }
             
-            /* Show remove button always on mobile */
+            .tz-arrow svg {
+                width: 10px;
+                height: 10px;
+            }
+            
             .tz-remove {
-                opacity: 0.6;
+                opacity: 0.5;
             }
             
-            /* Timeline slots - same size as desktop */
+            /* Timeline slots */
             .timeline {
                 padding: 14px 0 4px 0;
             }
@@ -1426,44 +1425,100 @@
                 top: -12px;
             }
             
-            /* ===== CALENDAR BUTTONS ===== */
+            /* ===== HIDE DESKTOP CALENDAR BUTTONS ===== */
             .create-invite-container {
-                padding: 10px;
-                margin-top: 8px;
+                display: none !important;
+            }
+            
+            /* ===== TIP - hide ===== */
+            .tip { display: none; }
+            
+            /* ===== FOOTER - hide desktop ===== */
+            .footer-links { display: none !important; }
+            
+            /* ===== MOBILE BOTTOM AREA ===== */
+            .mobile-bottom-area {
                 flex-shrink: 0;
+                background: var(--bg);
             }
             
-            .create-invite-label {
+            /* Calendar buttons (shown when selection exists) */
+            .mobile-calendar-bar {
+                display: none;
+                padding: 12px 16px;
+                background: var(--bg-subtle);
+            }
+            
+            .mobile-calendar-bar.visible {
+                display: block;
+            }
+            
+            .mobile-calendar-label {
                 font-size: 9px;
+                font-weight: 500;
+                color: var(--text-muted);
+                letter-spacing: 0.5px;
+                margin-bottom: 8px;
             }
             
-            .create-invite-buttons {
+            .mobile-calendar-buttons {
+                display: flex;
+                align-items: center;
                 gap: 8px;
             }
             
-            .create-btn-inline {
-                padding: 8px 10px;
+            .mobile-cal-btn {
+                padding: 10px 12px;
+                background: var(--bg-muted);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
             
-            .create-btn-inline svg {
-                width: 18px;
-                height: 18px;
+            .mobile-cal-btn:active {
+                transform: scale(0.95);
             }
             
-            .copy-btn-small {
-                font-size: 11px;
-                padding: 6px 10px;
+            .mobile-cal-btn svg {
+                width: 20px;
+                height: 20px;
             }
             
-            /* ===== BOTTOM TOOLBAR ===== */
+            .mobile-cal-separator {
+                width: 1px;
+                height: 24px;
+                background: var(--border);
+            }
+            
+            .mobile-copy-btn {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 12px;
+                background: var(--bg-muted);
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                color: var(--text-secondary);
+                font-size: 12px;
+                font-weight: 500;
+                font-family: inherit;
+                cursor: pointer;
+            }
+            
+            .mobile-copy-btn svg {
+                width: 14px;
+                height: 14px;
+            }
+            
+            /* Bottom toolbar */
             .mobile-bottom-toolbar {
                 display: flex;
                 gap: 12px;
                 padding: 12px 16px;
                 padding-bottom: max(12px, calc(env(safe-area-inset-bottom) + 8px));
-                background: var(--bg);
-                border-top: 1px solid var(--border);
-                flex-shrink: 0;
             }
             
             .mobile-add-btn {
@@ -1520,76 +1575,155 @@
                 stroke: currentColor;
             }
             
-            /* ===== SELECTION BAR (above bottom toolbar) ===== */
-            .mobile-selection-bar {
-                display: none;
-                padding: 10px 16px;
-                background: var(--bg-subtle);
-                border-top: 1px solid var(--border);
-                flex-shrink: 0;
-            }
-            
-            .mobile-selection-bar.visible {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
-            
-            .mobile-selection-time {
-                font-size: 14px;
-                font-weight: 600;
-                color: var(--accent);
-            }
-            
-            .mobile-selection-label {
-                font-size: 11px;
-                color: var(--text-muted);
-            }
-            
-            /* ===== TIP ===== */
-            .tip {
-                display: none;
-            }
-            
-            /* ===== FOOTER ===== */
-            .footer-links {
-                display: none !important;
-            }
-            
+            /* Mobile footer */
             .mobile-footer {
                 text-align: center;
                 padding: 4px 16px 8px 16px;
-                flex-shrink: 0;
+            }
+            
+            .mobile-footer span {
+                font-size: 10px;
+                color: var(--text-muted);
             }
             
             .mobile-footer a {
-                font-size: 11px;
                 color: var(--text-muted);
                 text-decoration: none;
             }
             
-            /* ===== ADD TO HOME BUTTON (matches Add to Chrome style) ===== */
-            .mobile-install-btn {
-                display: inline-flex;
+            /* ===== LOCAL TIME DISPLAY ===== */
+            .mobile-local-display {
+                display: flex;
                 align-items: center;
-                gap: 6px;
-                padding: 8px 14px;
-                font-size: 13px;
-                font-weight: 500;
-                font-family: inherit;
-                border-radius: 20px;
-                cursor: pointer;
-                background: transparent;
-                border: 1px solid var(--accent);
-                color: var(--accent);
-                transition: all 0.15s;
+                gap: 8px;
             }
             
-            .mobile-install-btn:hover,
-            .mobile-install-btn:active {
-                background: var(--accent);
-                color: #000;
+            .mobile-local-time {
+                font-size: 22px;
+                font-weight: 600;
+                line-height: 1;
             }
+            
+            .mobile-local-meta {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .mobile-local-date {
+                font-size: 10px;
+                color: var(--text-muted);
+            }
+            
+            .mobile-local-badge {
+                font-size: 7px;
+                font-weight: 600;
+                background: var(--accent-bg);
+                color: var(--accent);
+                padding: 1px 4px;
+                border-radius: 2px;
+                margin-top: 1px;
+            }
+            
+            /* ===== SEARCH BOTTOM SHEET ===== */
+            .mobile-search-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                display: none;
+                align-items: flex-end;
+            }
+            
+            .mobile-search-overlay.open {
+                display: flex;
+            }
+            
+            .mobile-search-sheet {
+                width: 100%;
+                max-height: 70vh;
+                background: var(--bg);
+                border-radius: 16px 16px 0 0;
+                padding: 12px 16px;
+                padding-bottom: max(16px, calc(env(safe-area-inset-bottom) + 8px));
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .mobile-search-handle {
+                width: 36px;
+                height: 4px;
+                background: var(--border);
+                border-radius: 2px;
+                margin: 0 auto 16px auto;
+            }
+            
+            .mobile-search-input {
+                width: 100%;
+                padding: 14px 16px;
+                background: var(--bg-muted);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                color: var(--text);
+                font-size: 16px;
+                font-family: inherit;
+                outline: none;
+                margin-bottom: 12px;
+            }
+            
+            .mobile-search-input:focus {
+                border-color: var(--accent);
+            }
+            
+            .mobile-search-input::placeholder {
+                color: var(--text-muted);
+            }
+            
+            .mobile-search-results {
+                flex: 1;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .mobile-search-result {
+                padding: 14px 0;
+                border-bottom: 1px solid var(--border);
+                cursor: pointer;
+            }
+            
+            .mobile-search-result:last-child {
+                border-bottom: none;
+            }
+            
+            .mobile-search-result:active {
+                background: var(--bg-muted);
+                margin: 0 -16px;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+            
+            .mobile-search-result-city {
+                font-size: 16px;
+                font-weight: 500;
+                color: var(--text);
+            }
+            
+            .mobile-search-result-meta {
+                font-size: 13px;
+                color: var(--text-muted);
+                margin-top: 2px;
+            }
+            
+            .mobile-search-noresult {
+                padding: 20px;
+                text-align: center;
+                color: var(--text-muted);
+                font-size: 14px;
+            }
+            
         }
     </style>
 </head>
@@ -1610,15 +1744,13 @@
                 <a href="#" class="extension-pill desktop-only" id="extensionPill" title="Quick access from any tab">
                     ⚡ Add to Chrome
                 </a>
-                <!-- Mobile: show install button styled like Add to Chrome -->
-                <button class="mobile-install-btn mobile-only" id="mobileInstallBtn">
-                    📱 Add to Home
-                </button>
                 <!-- Mobile: local time display -->
-                <div class="mobile-only" style="text-align: right; margin-top: 8px;">
+                <div class="mobile-local-display mobile-only">
                     <div class="mobile-local-time" id="mobileLocalTime">--:--</div>
-                    <div class="mobile-local-date" id="mobileLocalDate">--</div>
-                    <div class="mobile-local-badge">LOCAL</div>
+                    <div class="mobile-local-meta">
+                        <div class="mobile-local-date" id="mobileLocalDate">--</div>
+                        <div class="mobile-local-badge">LOCAL</div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -1722,47 +1854,90 @@
         </div>
         
         <div class="footer-links desktop-only">
-            <button class="share-btn" id="shareBtn" title="Share Overlap">
-                <svg viewBox="0 0 24 24" fill="none" width="14" height="14">
-                    <path d="M18 8a3 3 0 100-6 3 3 0 000 6zM6 15a3 3 0 100-6 3 3 0 000 6zM18 22a3 3 0 100-6 3 3 0 000 6zM8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                Share
-            </button>
-            <a href="/privacy.html" class="footer-link">Privacy</a>
-            <span class="footer-divider">·</span>
-            <span class="made-by">Made by <a href="https://www.linkedin.com/in/pavmadhan/" target="_blank" class="footer-link">Pav Singh</a></span>
+            <span class="made-by">Made by <a href="https://www.linkedin.com/in/pavmadhan/" target="_blank" class="footer-link">Pav Singh</a> using Claude Opus 4.5</span>
         </div>
         
         <!-- ========== MOBILE ADDITIONS ========== -->
-        <!-- Selection bar (shown above bottom toolbar when time selected) -->
-        <div class="mobile-selection-bar mobile-only" id="mobileSelectionBar">
-            <div>
-                <div class="mobile-selection-time" id="mobileSelectionTime">--</div>
-                <div class="mobile-selection-label">Local time</div>
+        
+        <!-- Mobile bottom area (calendar + toolbar + footer) -->
+        <div class="mobile-bottom-area mobile-only">
+            <!-- Calendar bar (shown when selection exists) -->
+            <div class="mobile-calendar-bar" id="mobileCalendarBar">
+                <div class="mobile-calendar-label">ADD TO CALENDAR</div>
+                <div class="mobile-calendar-buttons">
+                    <button class="mobile-cal-btn" id="mobileGoogleBtn" title="Google Calendar">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                        </svg>
+                    </button>
+                    <button class="mobile-cal-btn" id="mobileTeamsBtn" title="Microsoft Teams">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M20.5 6h-5V4.5A1.5 1.5 0 0014 3h-4a1.5 1.5 0 00-1.5 1.5V6h-5A1.5 1.5 0 002 7.5v10A1.5 1.5 0 003.5 19h17a1.5 1.5 0 001.5-1.5v-10A1.5 1.5 0 0020.5 6z" fill="#5059C9"/>
+                            <circle cx="17" cy="5" r="2.5" fill="#7B83EB"/>
+                            <circle cx="12" cy="10" r="3" fill="white"/>
+                            <path d="M7 18v-4a5 5 0 0110 0v4H7z" fill="white"/>
+                        </svg>
+                    </button>
+                    <button class="mobile-cal-btn" id="mobileZoomBtn" title="Zoom">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="2" y="5" width="20" height="14" rx="3" fill="#2D8CFF"/>
+                            <path d="M7 9.5h6v5H7z" fill="white"/>
+                            <path d="M14 10l4-2v8l-4-2v-4z" fill="white"/>
+                        </svg>
+                    </button>
+                    <button class="mobile-cal-btn" id="mobileIcalBtn" title="Download .ics">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <rect x="3" y="4" width="18" height="18" rx="2" stroke="#a3a3a3" stroke-width="2"/>
+                            <line x1="3" y1="10" x2="21" y2="10" stroke="#a3a3a3" stroke-width="2"/>
+                            <line x1="8" y1="2" x2="8" y2="6" stroke="#a3a3a3" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="16" y1="2" x2="16" y2="6" stroke="#a3a3a3" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                    <span class="mobile-cal-separator"></span>
+                    <button class="mobile-copy-btn" id="mobileCopyBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2"/>
+                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                        </svg>
+                        Copy
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Bottom toolbar -->
+            <div class="mobile-bottom-toolbar">
+                <button class="mobile-add-btn" id="mobileAddBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Add a place...
+                </button>
+                <button class="mobile-find-btn" id="mobileBottomFindBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    Find Time
+                </button>
+            </div>
+            
+            <!-- Footer -->
+            <div class="mobile-footer">
+                <span>Made by <a href="https://www.linkedin.com/in/pavmadhan/" target="_blank">Pav Singh</a> using Claude Opus 4.5</span>
             </div>
         </div>
         
-        <!-- Bottom toolbar for thumb access -->
-        <div class="mobile-bottom-toolbar mobile-only">
-            <button class="mobile-add-btn" id="mobileAddBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-                    <line x1="12" y1="5" x2="12" y2="19"/>
-                    <line x1="5" y1="12" x2="19" y2="12"/>
-                </svg>
-                Add a place...
-            </button>
-            <button class="mobile-find-btn" id="mobileBottomFindBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5">
-                    <circle cx="11" cy="11" r="8"/>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                </svg>
-                Find Time
-            </button>
-        </div>
-        
-        <!-- Mobile footer -->
-        <div class="mobile-footer mobile-only">
-            <a href="https://www.linkedin.com/in/pavmadhan/" target="_blank">Made by Pav Singh</a>
+        <!-- Mobile Search Bottom Sheet -->
+        <div class="mobile-search-overlay mobile-only" id="mobileSearchOverlay">
+            <div class="mobile-search-sheet">
+                <div class="mobile-search-handle"></div>
+                <input type="text" class="mobile-search-input" id="mobileSearchInput" placeholder="Search city or timezone...">
+                <div class="mobile-search-results" id="mobileSearchResults"></div>
+            </div>
         </div>
     </div>
 
@@ -3126,7 +3301,7 @@
                     document.getElementById('addTzResults').classList.remove('open');
                     selectedResultIndex = -1;
                 }
-                if (!e.target.closest('.tz-list') && !e.target.closest('.create-invite-container') && !e.target.closest('.selection-box') && !e.target.closest('.find-time-btn') && !e.target.closest('.date-picker-inline')) {
+                if (!e.target.closest('.tz-list') && !e.target.closest('.create-invite-container') && !e.target.closest('.selection-box') && !e.target.closest('.find-time-btn') && !e.target.closest('.date-picker-inline') && !e.target.closest('.mobile-find-btn') && !e.target.closest('.mobile-calendar-bar')) {
                     clearSel();
                 }
             });
@@ -3254,8 +3429,15 @@
             if (overlaps.length === 0) {
                 // No overlap found - show button as inactive briefly
                 const btn = document.getElementById('findTimeBtn');
-                btn.classList.add('no-overlap');
-                setTimeout(() => btn.classList.remove('no-overlap'), 1500);
+                const mobileBtn = document.getElementById('mobileBottomFindBtn');
+                if (btn) {
+                    btn.classList.add('no-overlap');
+                    setTimeout(() => btn.classList.remove('no-overlap'), 1500);
+                }
+                if (mobileBtn) {
+                    mobileBtn.style.background = 'var(--red)';
+                    setTimeout(() => mobileBtn.style.background = '', 1500);
+                }
                 return;
             }
             
@@ -3287,10 +3469,10 @@
                 // Auto-select this time slot (triggers yellow highlight + create invite button)
                 sel = {start: targetSlotIndex, end: targetSlotIndex + 1};
                 
-                // Small delay to let scroll complete, then update highlight
+                // Small delay to let scroll complete, then update selection box
                 setTimeout(() => {
                     updateSelectionBox();
-                }, 50);
+                }, 100);
             }
         }
 
@@ -4067,70 +4249,166 @@
             }
         }
         
-        // Update mobile selection bar (mirrors desktop selection)
-        function updateMobileSelectionBar() {
-            const bar = document.getElementById('mobileSelectionBar');
-            const timeEl = document.getElementById('mobileSelectionTime');
-            
-            if (!bar || !timeEl) return;
+        // Update mobile calendar bar visibility
+        function updateMobileCalendarBar() {
+            const bar = document.getElementById('mobileCalendarBar');
+            if (!bar) return;
             
             if (sel.start !== null && sel.end !== null) {
-                const base = getBaseDate();
-                const min = Math.min(sel.start, sel.end);
-                const max = Math.max(sel.start, sel.end);
-                const startTime = new Date(base.getTime() + min * 1800000);
-                const endTime = new Date(base.getTime() + (max + 1) * 1800000);
-                const fmt = { hour: 'numeric', minute: '2-digit', hour12: !use24h };
-                
-                timeEl.textContent = `${startTime.toLocaleTimeString('en-US', fmt)} – ${endTime.toLocaleTimeString('en-US', fmt)}`;
                 bar.classList.add('visible');
             } else {
                 bar.classList.remove('visible');
             }
         }
         
-        // Hook into existing updateSelectionBox to also update mobile bar
+        // Hook into existing updateSelectionBox to also update mobile calendar bar
         const originalUpdateSelectionBox = updateSelectionBox;
         updateSelectionBox = function() {
             originalUpdateSelectionBox();
-            updateMobileSelectionBar();
+            updateMobileCalendarBar();
         };
         
-        // Mobile bottom toolbar buttons - hook into existing desktop functions
+        // ===== MOBILE SEARCH BOTTOM SHEET =====
+        // Uses the same allTimezones and cityAliases database as desktop
+        
+        function openMobileSearch() {
+            const overlay = document.getElementById('mobileSearchOverlay');
+            const input = document.getElementById('mobileSearchInput');
+            
+            if (overlay) {
+                overlay.classList.add('open');
+                showMobileSearchResults(''); // Show popular cities initially
+                if (input) {
+                    input.value = '';
+                    setTimeout(() => input.focus(), 100);
+                }
+            }
+        }
+        
+        function closeMobileSearch() {
+            const overlay = document.getElementById('mobileSearchOverlay');
+            if (overlay) overlay.classList.remove('open');
+        }
+        
+        function showMobileSearchResults(query) {
+            const results = document.getElementById('mobileSearchResults');
+            if (!results) return;
+            
+            const q = query.toLowerCase().trim();
+            let matches = [];
+            
+            if (q.length < 2) {
+                // Show popular cities when no query
+                const popular = ['Paris', 'Singapore', 'Dubai', 'Sydney', 'Tokyo', 'New York', 'Los Angeles', 'Mumbai'];
+                popular.forEach(name => {
+                    const tz = cityAliases[name];
+                    if (tz) {
+                        const tzData = allTimezones.find(t => t.tz === tz);
+                        if (tzData && !zones.find(z => z.tz === tz)) {
+                            matches.push(tzData);
+                        }
+                    }
+                });
+            } else {
+                // Search using same logic as desktop searchTz function
+                // Check aliases first
+                Object.entries(cityAliases).forEach(([name, tz]) => {
+                    if (name.toLowerCase().includes(q)) {
+                        const tzData = allTimezones.find(t => t.tz === tz);
+                        if (tzData && !zones.find(z => z.tz === tz) && !matches.find(m => m.tz === tz)) {
+                            matches.push({ ...tzData, displayName: name });
+                        }
+                    }
+                });
+                
+                // Search all timezones
+                allTimezones.forEach(t => {
+                    if ((t.city.toLowerCase().includes(q) || t.region.toLowerCase().includes(q) || t.tz.toLowerCase().includes(q)) &&
+                        !zones.find(z => z.tz === t.tz) &&
+                        !matches.find(m => m.tz === t.tz)) {
+                        matches.push(t);
+                    }
+                });
+            }
+            
+            matches = matches.slice(0, 10);
+            
+            if (matches.length === 0 && q.length >= 2) {
+                results.innerHTML = '<div class="mobile-search-noresult">No results found</div>';
+                return;
+            }
+            
+            results.innerHTML = matches.map(r => `
+                <div class="mobile-search-result" data-tz="${r.tz}" data-city="${r.displayName || r.city}" data-region="${r.region}">
+                    <div class="mobile-search-result-city">${r.displayName || r.city}</div>
+                    <div class="mobile-search-result-meta">${r.region} · ${getOffset(r.tz)}</div>
+                </div>
+            `).join('');
+            
+            // Attach click listeners
+            document.querySelectorAll('.mobile-search-result').forEach(el => {
+                el.onclick = () => {
+                    const tz = el.dataset.tz;
+                    const city = el.dataset.city;
+                    const region = el.dataset.region;
+                    
+                    if (tz && city && region) {
+                        addZone(city, region, tz);
+                        closeMobileSearch();
+                    }
+                };
+            });
+        }
+        
+        // ===== EVENT LISTENERS =====
+        
+        // Add a place button - opens bottom sheet
         const mobileAddBtn = document.getElementById('mobileAddBtn');
         if (mobileAddBtn) {
-            mobileAddBtn.onclick = () => {
-                // Focus the desktop add input (it's still in DOM, just restyled)
-                const input = document.getElementById('addTzInput');
-                if (input) input.focus();
+            mobileAddBtn.onclick = openMobileSearch;
+        }
+        
+        // Search overlay click to close
+        const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
+        if (mobileSearchOverlay) {
+            mobileSearchOverlay.onclick = (e) => {
+                if (e.target === mobileSearchOverlay) closeMobileSearch();
             };
         }
         
+        // Search input
+        const mobileSearchInput = document.getElementById('mobileSearchInput');
+        if (mobileSearchInput) {
+            mobileSearchInput.oninput = (e) => showMobileSearchResults(e.target.value);
+        }
+        
+        // Find Time button - uses desktop findBestTime
         const mobileBottomFindBtn = document.getElementById('mobileBottomFindBtn');
         if (mobileBottomFindBtn) {
-            // Use the same findBestTime function as desktop
             mobileBottomFindBtn.onclick = findBestTime;
         }
         
-        // Mobile install button
-        const mobileInstallBtn = document.getElementById('mobileInstallBtn');
-        if (mobileInstallBtn) {
-            mobileInstallBtn.onclick = async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    if (outcome === 'accepted') {
-                        mobileInstallBtn.style.display = 'none';
-                    }
-                    deferredPrompt = null;
-                } else {
-                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-                    if (isIOS) {
-                        alert('To add to Home Screen:\n1. Tap the Share button\n2. Scroll down and tap "Add to Home Screen"');
-                    } else {
-                        alert('To install:\n1. Tap the menu (⋮)\n2. Tap "Add to Home Screen" or "Install App"');
-                    }
-                }
+        // Mobile calendar buttons
+        const mobileGoogleBtn = document.getElementById('mobileGoogleBtn');
+        if (mobileGoogleBtn) mobileGoogleBtn.onclick = () => openGoogleCalendar();
+        
+        const mobileTeamsBtn = document.getElementById('mobileTeamsBtn');
+        if (mobileTeamsBtn) mobileTeamsBtn.onclick = () => openTeamsCalendar();
+        
+        const mobileZoomBtn = document.getElementById('mobileZoomBtn');
+        if (mobileZoomBtn) mobileZoomBtn.onclick = () => openZoomMeeting();
+        
+        const mobileIcalBtn = document.getElementById('mobileIcalBtn');
+        if (mobileIcalBtn) mobileIcalBtn.onclick = () => downloadICS();
+        
+        const mobileCopyBtn = document.getElementById('mobileCopyBtn');
+        if (mobileCopyBtn) {
+            mobileCopyBtn.onclick = () => {
+                copyToClipboard();
+                mobileCopyBtn.innerHTML = '✓ Copied';
+                setTimeout(() => {
+                    mobileCopyBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>Copy`;
+                }, 1500);
             };
         }
         
@@ -4142,7 +4420,7 @@
                 wasMobile = nowMobile;
                 if (nowMobile) {
                     updateMobileHeader();
-                    updateMobileSelectionBar();
+                    updateMobileCalendarBar();
                 }
             }
         });
@@ -4150,6 +4428,7 @@
         // Initialize mobile
         if (isMobile()) {
             updateMobileHeader();
+            updateMobileCalendarBar();
             setInterval(updateMobileHeader, 1000);
         }
     </script>
